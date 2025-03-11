@@ -21,3 +21,11 @@ spring:
       chat:
         options:
           model: llama3.2:3b
+
+  security:
+    secret-key: "${SECURITY_SECRET_KEY}"
+    expiration: 86400000
+
+  mail:
+    username: "${MAIL_USERNAME}"
+    password: "${MAIL_PASSWORD}"
