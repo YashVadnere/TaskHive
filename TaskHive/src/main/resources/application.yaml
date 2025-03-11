@@ -1,0 +1,23 @@
+spring:
+  datasource:
+    url: "${DATABASE_URL}"
+    username: "${DATABASE_USERNAME}"
+    password: "${DATABASE_PASSWORD}"
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+
+    show-sql: true
+    format_sql: true
+
+  ai:
+    ollama:
+      chat:
+        options:
+          model: llama3.2:3b
