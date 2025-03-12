@@ -1,5 +1,7 @@
 package com.example.TaskHive.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -18,7 +20,7 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "user")
+@Table(name = "users")
 public class User implements UserDetails
 {
     @Id
@@ -39,13 +41,21 @@ public class User implements UserDetails
     private String email;
     private String password;
     private Long noOfProjects;
-    @Enumerated(value = EnumType.STRING)
+    @Enumerated(EnumType.STRING)
     private ActivePlan activePlan;
     private LocalDateTime lastLogin;
 
     private boolean isEnabled;
     private String verificationCode;
     private LocalDateTime verificationCodeExpiresAt;
+
+    @OneToOne(mappedBy = "user")
+    @JsonManagedReference
+    private ProfilePicture profilePicture;
+
+    @OneToMany(mappedBy = "user")
+    @JsonIgnore
+    private List<Token> tokens;
 
 
     @Override
@@ -55,12 +65,12 @@ public class User implements UserDetails
 
     @Override
     public String getPassword() {
-        return this.email;
+        return this.password;
     }
 
     @Override
     public String getUsername() {
-        return this.password;
+        return this.email;
     }
 
     @Override

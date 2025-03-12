@@ -19,4 +19,50 @@ public class GlobalExceptions
         exceptionResponse.setMessage(e.getMessage());
         return new ResponseEntity<>(exceptionResponse, HttpStatus.BAD_REQUEST);
     }
+
+    @ExceptionHandler(ResourceNotFound.class)
+    public ResponseEntity<?> handleResourceNotFound(ResourceNotFound e)
+    {
+        ExceptionResponse exceptionResponse = new ExceptionResponse();
+        exceptionResponse.setCurrentTime(LocalDateTime.now());
+        exceptionResponse.setMessage(e.getMessage());
+        return new ResponseEntity<>(exceptionResponse, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(VerificationCodeExpired.class)
+    public ResponseEntity<?> handleVerificationCodeExpired(VerificationCodeExpired e)
+    {
+        ExceptionResponse exceptionResponse = new ExceptionResponse();
+        exceptionResponse.setCurrentTime(LocalDateTime.now());
+        exceptionResponse.setMessage(e.getMessage());
+        return new ResponseEntity<>(exceptionResponse, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(IncorrectVerificationCode.class)
+    public ResponseEntity<?> handleIncorrectVerificationCode(IncorrectVerificationCode e)
+    {
+        ExceptionResponse exceptionResponse = new ExceptionResponse();
+        exceptionResponse.setCurrentTime(LocalDateTime.now());
+        exceptionResponse.setMessage(e.getMessage());
+        return new ResponseEntity<>(exceptionResponse, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(InvalidCredentials.class)
+    public ResponseEntity<?> handleInvalidCredentials(InvalidCredentials e)
+    {
+        ExceptionResponse exceptionResponse = new ExceptionResponse();
+        exceptionResponse.setCurrentTime(LocalDateTime.now());
+        exceptionResponse.setMessage(e.getMessage());
+        return new ResponseEntity<>(exceptionResponse, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(UserAlreadyRegistered.class)
+    public ResponseEntity<?> handleUserAlreadyRegistered(UserAlreadyRegistered e)
+    {
+        ExceptionResponse exceptionResponse = new ExceptionResponse();
+        exceptionResponse.setCurrentTime(LocalDateTime.now());
+        exceptionResponse.setMessage(e.getMessage());
+        return new ResponseEntity<>(exceptionResponse, HttpStatus.BAD_REQUEST);
+    }
+
 }
