@@ -136,14 +136,12 @@ public class UserAuthServiceImplementation implements UserAuthService
 
                 return responseTokenDto;
             }
-
             throw new InvalidCredentials("Invalid username or password");
         }
-
         throw new ResourceNotFound("User not found");
-
     }
 
+    @Transactional
     private void saveToken(String jwtToken, User user)
     {
         Token token = new Token();
@@ -161,6 +159,7 @@ public class UserAuthServiceImplementation implements UserAuthService
         tokenRepository.save(token);
     }
 
+    @Transactional
     private void revokeAllTokens(User user)
     {
         List<Token> tokenList = tokenRepository.findAllByUser_UserId(user.getUserId());
@@ -172,6 +171,7 @@ public class UserAuthServiceImplementation implements UserAuthService
     }
 
     @Override
+    @Transactional
     public ResponseDto reverify(String email)
     {
         Optional<User> optionalUser = userRepository.findByEmail(email);
@@ -185,12 +185,12 @@ public class UserAuthServiceImplementation implements UserAuthService
             }
             user.setVerificationCode(generateVerificationCode());
             user.setVerificationCodeExpiresAt(LocalDateTime.now().plusMinutes(2));
+            sendVerificationCode(user);
             userRepository.save(user);
             ResponseDto responseDto = new ResponseDto();
             responseDto.setMessage("New verification code sent");
             return responseDto;
         }
-
         throw new ResourceNotFound("User not found");
     }
 
@@ -204,6 +204,7 @@ public class UserAuthServiceImplementation implements UserAuthService
         user.setEmail(dto.getEmail());
         user.setPassword(passwordEncoder.encode(dto.getPassword()));
         user.setNoOfProjects(0L);
+        user.setProjectLimit(3L);
         user.setActivePlan(ActivePlan.FREE);
         user.setLastLogin(null);
         user.setEnabled(false);
@@ -236,6 +237,7 @@ public class UserAuthServiceImplementation implements UserAuthService
         return user;
     }
 
+    @Transactional
     private String generateVerificationCode()
     {
         SecureRandom random = new SecureRandom();
@@ -243,6 +245,7 @@ public class UserAuthServiceImplementation implements UserAuthService
         return String.valueOf(Math.abs(verificationCode));
     }
 
+    @Transactional
     private void sendVerificationCode(User user)
     {
         String to = user.getEmail();

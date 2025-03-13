@@ -41,6 +41,7 @@ public class User implements UserDetails
     private String email;
     private String password;
     private Long noOfProjects;
+    private Long projectLimit;
     @Enumerated(EnumType.STRING)
     private ActivePlan activePlan;
     private LocalDateTime lastLogin;

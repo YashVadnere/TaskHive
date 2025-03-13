@@ -28,6 +28,7 @@ public class ProfilePicture
     private String fileName;
     private String fileType;
     @Lob
+    @Basic(fetch = FetchType.EAGER)
     private byte[] image;
     private String downloadUrl;
 

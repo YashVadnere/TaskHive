@@ -5,6 +5,8 @@ spring:
     username: "${DATABASE_USERNAME}"
     password: "${DATABASE_PASSWORD}"
     driver-class-name: org.postgresql.Driver
+    hikari:
+      auto-commit: false
 
   jpa:
     hibernate:
@@ -26,16 +28,7 @@ spring:
   security:
     secret-key: "${SECURITY_SECRET_KEY}"
     expiration: 86400000
-    oauth2:
-      client:
-        registration:
-          google:
-            client-name: "${OAUTH_CLIENT_NAME}"
-            client-id: "${OAUTH_CLIENT_ID}"
-            client-secret: "${OAUTH_CLIENT_SECRET}"
-            scope:
-              - email
-              - profile
+
 
   app:
     oauth2:

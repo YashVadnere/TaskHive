@@ -24,19 +24,17 @@ public class SecurityConfig
     private final UserDetailsService userDetailsService;
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
     private final CustomLogoutHandler customLogoutHandler;
-    private final OAuthAuthenticationSuccessHandler successHandler;
+
 
     @Autowired
     public SecurityConfig(
             UserDetailsService userDetailsService,
             JwtAuthenticationFilter jwtAuthenticationFilter,
-            CustomLogoutHandler customLogoutHandler,
-            OAuthAuthenticationSuccessHandler successHandler
+            CustomLogoutHandler customLogoutHandler
     ) {
         this.userDetailsService = userDetailsService;
         this.jwtAuthenticationFilter = jwtAuthenticationFilter;
         this.customLogoutHandler = customLogoutHandler;
-        this.successHandler = successHandler;
     }
 
     @Bean
@@ -73,7 +71,8 @@ public class SecurityConfig
                                 .anyRequest().authenticated()
                 ).sessionManagement(
                         session->session
-                                .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
+                                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+
                 ).addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .logout(
                         logout->logout
@@ -87,11 +86,6 @@ public class SecurityConfig
                                         ) -> SecurityContextHolder.clearContext()
                                 )
                 );
-
-        httpSecurity.oauth2Login(oauth -> {
-//            oauth.loginPage("/login");
-            oauth.successHandler(successHandler);
-        });
 
         return httpSecurity.build();
     }
