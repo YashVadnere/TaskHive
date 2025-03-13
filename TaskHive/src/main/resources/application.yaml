@@ -1,9 +1,4 @@
 spring:
-  servlet:
-    multipart:
-      enabled: true
-      max-file-size: 20MB
-      max-request-size=: 20MB
 
   datasource:
     url: "${DATABASE_URL}"
@@ -18,9 +13,9 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
 
     show-sql: true
-    format_sql: true
 
   ai:
     ollama:
@@ -31,7 +26,28 @@ spring:
   security:
     secret-key: "${SECURITY_SECRET_KEY}"
     expiration: 86400000
+    oauth2:
+      client:
+        registration:
+          google:
+            client-name: "${OAUTH_CLIENT_NAME}"
+            client-id: "${OAUTH_CLIENT_ID}"
+            client-secret: "${OAUTH_CLIENT_SECRET}"
+            scope:
+              - email
+              - profile
+
+  app:
+    oauth2:
+      redirect-url: "/user-info"
 
   mail:
     username: "${MAIL_USERNAME}"
     password: "${MAIL_PASSWORD}"
+
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 20MB
+      max-request-size: 20MB
+

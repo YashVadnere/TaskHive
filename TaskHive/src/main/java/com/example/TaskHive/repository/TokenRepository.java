@@ -10,4 +10,5 @@ public interface TokenRepository extends JpaRepository<Token, Long>
 {
     List<Token> findAllByUser_UserId(Long userId);
     Optional<Token> findByToken(String jwtToken);
+    Optional<Token> findByUser_UserIdAndIsLoggedOutFalse(Long userId);
 }

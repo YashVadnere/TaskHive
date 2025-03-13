@@ -44,4 +44,10 @@ public class UserAuthController
         return new ResponseEntity<>(userAuthServiceInterface.signIn(dto),HttpStatus.OK);
     }
 
+    @GetMapping("/home")
+    public String greet()
+    {
+        return "Welcome to home screen";
+    }
+
 }
