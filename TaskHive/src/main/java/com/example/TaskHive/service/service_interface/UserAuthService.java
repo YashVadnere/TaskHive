@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 @Service
-public interface UserAuthServiceInterface
+public interface UserAuthService
 {
 
     ResponseDto signUp(UserSignUpDto dto, MultipartFile file);

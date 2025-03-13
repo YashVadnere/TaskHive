@@ -57,6 +57,9 @@ public class User implements UserDetails
     @JsonIgnore
     private List<Token> tokens;
 
+    @OneToMany(mappedBy = "user")
+    @JsonIgnore
+    private List<Project> projects;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

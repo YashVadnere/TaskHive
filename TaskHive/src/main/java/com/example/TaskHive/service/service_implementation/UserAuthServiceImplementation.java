@@ -11,7 +11,7 @@ import com.example.TaskHive.repository.ProfilePictureRepository;
 import com.example.TaskHive.repository.TokenRepository;
 import com.example.TaskHive.repository.UserRepository;
 import com.example.TaskHive.service.EmailService;
-import com.example.TaskHive.service.service_interface.UserAuthServiceInterface;
+import com.example.TaskHive.service.service_interface.UserAuthService;
 import jakarta.transaction.Transactional;
 import org.apache.tika.Tika;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +30,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class UserAuthServiceImplementation implements UserAuthServiceInterface
+public class UserAuthServiceImplementation implements UserAuthService
 {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
@@ -181,7 +181,7 @@ public class UserAuthServiceImplementation implements UserAuthServiceInterface
             User user = optionalUser.get();
             if(user.isEnabled())
             {
-                throw new IllegalArgumentException("User is already verified");
+                throw new UserAlreadyVerified("User is already verified");
             }
             user.setVerificationCode(generateVerificationCode());
             user.setVerificationCodeExpiresAt(LocalDateTime.now().plusMinutes(2));
@@ -229,7 +229,7 @@ public class UserAuthServiceImplementation implements UserAuthServiceInterface
                 profilePictureRepository.save(profilePicture);
 
             } catch (IOException e) {
-                throw new RuntimeException(e);
+                throw new ResourceNotFound("Profile not found");
             }
         }
 

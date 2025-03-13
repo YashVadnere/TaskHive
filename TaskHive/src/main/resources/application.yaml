@@ -39,7 +39,7 @@ spring:
 
   app:
     oauth2:
-      redirect-url: "/user-info"
+      redirect-url: "/auth/user-info"
 
   mail:
     username: "${MAIL_USERNAME}"

@@ -65,4 +65,13 @@ public class GlobalExceptions
         return new ResponseEntity<>(exceptionResponse, HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler(UserAlreadyVerified.class)
+    public ResponseEntity<?> handleUserAlreadyVerified(UserAlreadyVerified e)
+    {
+        ExceptionResponse exceptionResponse = new ExceptionResponse();
+        exceptionResponse.setCurrentTime(LocalDateTime.now());
+        exceptionResponse.setMessage(e.getMessage());
+        return new ResponseEntity<>(exceptionResponse, HttpStatus.BAD_REQUEST);
+    }
+
 }
