@@ -33,7 +33,7 @@ public class UserAuthController
     }
 
     @PostMapping("/re-verify/{email}")
-    public ResponseEntity<ResponseDto> reverify(@PathVariable("email") String email)
+    public ResponseEntity<ResponseDto> reVerify(@PathVariable("email") String email)
     {
         return new ResponseEntity<>(userAuthService.reverify(email),HttpStatus.OK);
     }
@@ -42,12 +42,6 @@ public class UserAuthController
     public ResponseEntity<ResponseTokenDto> signIn(@RequestBody UserSignInDto dto)
     {
         return new ResponseEntity<>(userAuthService.signIn(dto),HttpStatus.OK);
-    }
-
-    @GetMapping("/home")
-    public String greet()
-    {
-        return "Welcome to home screen";
     }
 
 }
