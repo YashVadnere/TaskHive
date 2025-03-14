@@ -21,6 +21,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 public class UserServiceImplementation implements UserService
 {
@@ -129,6 +132,7 @@ public class UserServiceImplementation implements UserService
     }
 
     @Override
+    @Transactional
     public ResponseDto deleteProfilePicture(Long userId)
     {
         User user = userRepository.findById(userId)
@@ -138,8 +142,8 @@ public class UserServiceImplementation implements UserService
 
         if(profilePicture!=null)
         {
-            profilePictureRepository.deleteById(profilePicture.getProfilePictureId());
             user.setProfilePicture(null);
+            profilePictureRepository.deleteById(profilePicture.getProfilePictureId());
             userRepository.save(user);
             ResponseDto responseDto = new ResponseDto();
             responseDto.setMessage("Profile picture deleted successfully");
@@ -149,9 +153,33 @@ public class UserServiceImplementation implements UserService
     }
 
     @Override
-    public UserSearchDto search(String user)
+    public List<UserSearchDto> search(String fullName)
     {
+        List<User> users = userRepository.findAllByFullNameContainingIgnoreCase(fullName);
 
+        return users.stream()
+                .map(this::mapUserEntityToUserSearchDto)
+                .collect(Collectors.toList());
+
+    }
+
+    private UserSearchDto mapUserEntityToUserSearchDto(User user)
+    {
+        UserSearchDto dto = new UserSearchDto();
+        dto.setUserId(user.getUserId());
+        dto.setFullName(user.getFullName());
+        dto.setJobTitle(user.getJobTitle());
+
+        if(user.getProfilePicture()!=null)
+        {
+            dto.setImageUrl(user.getProfilePicture().getDownloadUrl());
+        }
+        else
+        {
+            dto.setImageUrl(null);
+        }
+
+        return dto;
     }
 
     private User mapUserUpdateDtoToUserEntity(Long userId, UserUpdateDto dto)
@@ -162,10 +190,12 @@ public class UserServiceImplementation implements UserService
         if(dto.getFirstName()!=null && !dto.getFirstName().isEmpty())
         {
             user.setFirstName(dto.getFirstName());
+            user.setFullName(user.getFirstName()+" "+user.getLastName());
         }
         if(dto.getLastName()!=null && !dto.getLastName().isEmpty())
         {
             user.setLastName(dto.getLastName());
+            user.setFullName(user.getFirstName()+" "+user.getLastName());
         }
         if(dto.getJobTitle()!=null && !dto.getJobTitle().isEmpty())
         {
@@ -198,8 +228,7 @@ public class UserServiceImplementation implements UserService
     {
         UserResponseDto dto = new UserResponseDto();
         dto.setUserId(user.getUserId());
-        dto.setFirstName(user.getFirstName());
-        dto.setLastName(user.getLastName());
+        dto.setFullName(user.getFullName());
         dto.setJobTitle(user.getJobTitle());
         dto.setEmail(user.getEmail());
         dto.setNoOfProjects(user.getNoOfProjects());

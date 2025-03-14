@@ -16,8 +16,7 @@ import java.time.LocalDateTime;
 public class UserResponseDto
 {
     private Long userId;
-    private String firstName;
-    private String lastName;
+    private String fullName;
     private String jobTitle;
     private String email;
     private Long noOfProjects;

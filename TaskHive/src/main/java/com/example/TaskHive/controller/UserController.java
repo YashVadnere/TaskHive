@@ -11,6 +11,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/v1")
 public class UserController
@@ -36,17 +38,16 @@ public class UserController
     }
 
     @GetMapping("/users/search")
-    public ResponseEntity<UserSearchDto> search(@RequestParam String user)
+    public ResponseEntity<List<UserSearchDto>> search(@RequestParam String fullName)
     {
-        return new ResponseEntity<>(userService.search(user), HttpStatus.OK);
+        return new ResponseEntity<>(userService.search(fullName), HttpStatus.OK);
     }
 
     @PutMapping("/users/{user-id}")
     public ResponseEntity<ResponseDto> updateProfile(
             @PathVariable("user-id") Long userId,
-            @RequestPart UserUpdateDto dto,
-            @RequestPart MultipartFile file
-            ) {
+            @RequestBody UserUpdateDto dto
+    ) {
         return new ResponseEntity<>(userService.updateProfile(userId, dto), HttpStatus.OK);
     }
 

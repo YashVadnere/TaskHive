@@ -12,8 +12,7 @@ import lombok.Setter;
 public class UserSearchDto
 {
     private Long userId;
-    private String firstName;
-    private String lastName;
+    private String fullName;
     private String jobTitle;
     private String imageUrl;
 }

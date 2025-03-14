@@ -13,6 +13,7 @@ public class UserSignUpDto
 {
     private String firstName;
     private String lastName;
+    private String phoneNumber;
     private String jobTitle;
     private String email;
     private String password;

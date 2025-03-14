@@ -216,6 +216,7 @@ public class UserAuthServiceImplementation implements UserAuthService
         User user = new User();
         user.setFirstName(dto.getFirstName());
         user.setLastName(dto.getLastName());
+        user.setFullName(user.getFirstName()+" "+user.getLastName());
         user.setJobTitle(dto.getJobTitle());
         user.setEmail(dto.getEmail());
         user.setPassword(passwordEncoder.encode(dto.getPassword()));
@@ -273,7 +274,7 @@ public class UserAuthServiceImplementation implements UserAuthService
                 "          <table width=\"600\" border=\"0\" cellspacing=\"0\" cellpadding=\"10\">\n" +
                 "            <tr>\n" +
                 "              <td align=\"center\">\n" +
-                "                <h2>Welcome, <strong>"+user.getFirstName()+" "+ user.getLastName()+"</strong> </h2>\n" +
+                "                <h2>Welcome, <strong>"+user.getFullName()+"</strong> </h2>\n" +
                 "                <p>Thank you for signing up! Please use the verification code below to verify your email address.</p>\n" +
                 "                <h3>Your Verification Code:</h3>\n" +
                 "                <h1>"+user.getVerificationCode()+"</h1>\n" +
