@@ -1,0 +1,67 @@
+package com.example.TaskHive.controller;
+
+import com.example.TaskHive.dto.ResponseDto;
+import com.example.TaskHive.dto.UserResponseDto;
+import com.example.TaskHive.dto.UserSearchDto;
+import com.example.TaskHive.dto.UserUpdateDto;
+import com.example.TaskHive.service.service_interface.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+@RestController
+@RequestMapping("/api/v1")
+public class UserController
+{
+    private final UserService userService;
+
+    @Autowired
+    public UserController(UserService userService)
+    {
+        this.userService = userService;
+    }
+
+    @GetMapping("/users/{user-id}")
+    public ResponseEntity<UserResponseDto> getUserById(@PathVariable("user-id") Long userId)
+    {
+        return new ResponseEntity<>(userService.getUserById(userId), HttpStatus.OK);
+    }
+
+    @GetMapping("/users/{user-id}/profile-picture")
+    public ResponseEntity<byte[]> getProfilePictureById(@PathVariable("user-id") Long userId)
+    {
+        return userService.getProfilePictureById(userId);
+    }
+
+    @GetMapping("/users/search")
+    public ResponseEntity<UserSearchDto> search(@RequestParam String user)
+    {
+        return new ResponseEntity<>(userService.search(user), HttpStatus.OK);
+    }
+
+    @PutMapping("/users/{user-id}")
+    public ResponseEntity<ResponseDto> updateProfile(
+            @PathVariable("user-id") Long userId,
+            @RequestPart UserUpdateDto dto,
+            @RequestPart MultipartFile file
+            ) {
+        return new ResponseEntity<>(userService.updateProfile(userId, dto), HttpStatus.OK);
+    }
+
+    @PutMapping("/users/{user-id}/profile-picture")
+    public ResponseEntity<ResponseDto> updateProfilePicture(
+            @PathVariable("user-id") Long userId,
+            @RequestPart MultipartFile file
+    ) {
+        return new ResponseEntity<>(userService.updateProfilePicture(userId, file), HttpStatus.OK);
+    }
+
+    @DeleteMapping("/users/{user-id}/profile-picture")
+    public ResponseEntity<ResponseDto> deleteProfilePicture(@PathVariable("user-id") Long userId)
+    {
+        return new ResponseEntity<>(userService.deleteProfilePicture(userId), HttpStatus.OK);
+    }
+
+}

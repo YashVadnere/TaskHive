@@ -67,6 +67,19 @@ public class UserAuthServiceImplementation implements UserAuthService
 
         if(optionalUser.isPresent())
         {
+            User user = optionalUser.get();
+            if(!user.isEnabled())
+            {
+                user.setVerificationCode(generateVerificationCode());
+                user.setVerificationCodeExpiresAt(LocalDateTime.now().plusMinutes(2));
+                sendVerificationCode(user);
+                userRepository.save(user);
+
+                ResponseDto responseDto = new ResponseDto();
+                responseDto.setMessage("User already registered but not verified. A new OTP has been sent to your email.");
+                return responseDto;
+
+            }
             throw new UserAlreadyRegistered("Email already registered");
         }
 
@@ -133,6 +146,9 @@ public class UserAuthServiceImplementation implements UserAuthService
                 ResponseTokenDto responseTokenDto = new ResponseTokenDto();
                 responseTokenDto.setJwtToken(jwtToken);
                 responseTokenDto.setMessage("Log-in successful");
+
+                user.setLastLogin(LocalDateTime.now());
+                userRepository.save(user);
 
                 return responseTokenDto;
             }
@@ -221,7 +237,7 @@ public class UserAuthServiceImplementation implements UserAuthService
                 profilePicture.setFileType(tika.detect(file.getInputStream()));
                 profilePicture.setImage(file.getBytes());
 
-                String downloadUrl = "http://localhost:8080/api/v1/user/"+user.getUserId()+"/profile-picture";
+                String downloadUrl = "http://localhost:8080/api/v1/users/"+user.getUserId()+"/profile-picture";
                 profilePicture.setDownloadUrl(downloadUrl);
 
                 user.setProfilePicture(profilePicture);
@@ -233,7 +249,6 @@ public class UserAuthServiceImplementation implements UserAuthService
                 throw new ResourceNotFound("Profile not found");
             }
         }
-
         return user;
     }
 

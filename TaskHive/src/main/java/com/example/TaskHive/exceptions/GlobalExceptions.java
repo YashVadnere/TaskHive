@@ -75,7 +75,34 @@ public class GlobalExceptions
     }
 
     @ExceptionHandler(ProjectLimitExceeded.class)
-    public ResponseEntity<?> handleUserAlreadyVerified(ProjectLimitExceeded e)
+    public ResponseEntity<?> handleProjectLimitExceeded(ProjectLimitExceeded e)
+    {
+        ExceptionResponse exceptionResponse = new ExceptionResponse();
+        exceptionResponse.setCurrentTime(LocalDateTime.now());
+        exceptionResponse.setMessage(e.getMessage());
+        return new ResponseEntity<>(exceptionResponse, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(Mismatch.class)
+    public ResponseEntity<?> handleMismatch(Mismatch e)
+    {
+        ExceptionResponse exceptionResponse = new ExceptionResponse();
+        exceptionResponse.setCurrentTime(LocalDateTime.now());
+        exceptionResponse.setMessage(e.getMessage());
+        return new ResponseEntity<>(exceptionResponse, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(BadRequestException.class)
+    public ResponseEntity<?> handleBadRequestException(BadRequestException e)
+    {
+        ExceptionResponse exceptionResponse = new ExceptionResponse();
+        exceptionResponse.setCurrentTime(LocalDateTime.now());
+        exceptionResponse.setMessage(e.getMessage());
+        return new ResponseEntity<>(exceptionResponse, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(FileStorageException.class)
+    public ResponseEntity<?> handleFileStorageException(FileStorageException e)
     {
         ExceptionResponse exceptionResponse = new ExceptionResponse();
         exceptionResponse.setCurrentTime(LocalDateTime.now());

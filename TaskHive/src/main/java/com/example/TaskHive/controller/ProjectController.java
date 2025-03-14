@@ -1,9 +1,9 @@
 package com.example.TaskHive.controller;
 
 import com.example.TaskHive.dto.ProjectPostDto;
+import com.example.TaskHive.dto.ProjectResponseDto;
 import com.example.TaskHive.dto.ProjectUpdateDto;
 import com.example.TaskHive.dto.ResponseDto;
-import com.example.TaskHive.entity.Project;
 import com.example.TaskHive.service.service_interface.ProjectService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -33,13 +33,13 @@ public class ProjectController
     }
 
     @GetMapping("/users/{user-id}/projects")
-    public ResponseEntity<List<Project>> getAllProjects(@PathVariable("user-id") Long userId)
+    public ResponseEntity<List<ProjectResponseDto>> getAllProjects(@PathVariable("user-id") Long userId)
     {
         return new ResponseEntity<>(projectService.getAllProjects(userId),HttpStatus.OK);
     }
 
     @GetMapping("/users/{user-id}/projects/{project-id}")
-    public ResponseEntity<Project> getProjectById(
+    public ResponseEntity<ProjectResponseDto> getProjectById(
             @PathVariable("user-id") Long userId,
             @PathVariable("project-id")Long projectId
     ) {
@@ -47,7 +47,7 @@ public class ProjectController
     }
 
     @GetMapping("/users/{user-id}/projects/search")
-    public ResponseEntity<List<Project>> search(
+    public ResponseEntity<List<ProjectResponseDto>> search(
             @PathVariable("user-id") Long userId,
             @RequestParam String projectName
     ) {

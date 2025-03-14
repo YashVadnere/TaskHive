@@ -21,8 +21,10 @@ public class UserAuthController
     }
 
     @PostMapping("/sign-up")
-    public ResponseEntity<ResponseDto> signUp(@RequestPart UserSignUpDto dto, @RequestPart MultipartFile file)
-    {
+    public ResponseEntity<ResponseDto> signUp(
+            @RequestPart UserSignUpDto dto,
+            @RequestPart(required = false) MultipartFile file
+    ) {
         return new ResponseEntity<>(userAuthService.signUp(dto, file), HttpStatus.OK);
     }
 

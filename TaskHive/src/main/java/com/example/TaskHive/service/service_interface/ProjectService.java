@@ -1,6 +1,7 @@
 package com.example.TaskHive.service.service_interface;
 
 import com.example.TaskHive.dto.ProjectPostDto;
+import com.example.TaskHive.dto.ProjectResponseDto;
 import com.example.TaskHive.dto.ProjectUpdateDto;
 import com.example.TaskHive.dto.ResponseDto;
 import com.example.TaskHive.entity.Project;
@@ -14,13 +15,13 @@ public interface ProjectService
 
     ResponseDto createProject(Long userId, ProjectPostDto dto);
 
-    List<Project> getAllProjects(Long userId);
+    List<ProjectResponseDto> getAllProjects(Long userId);
 
-    Project getProjectById(Long userId, Long projectId);
+    ProjectResponseDto getProjectById(Long userId, Long projectId);
 
     ResponseDto deleteProjectById(Long userId, Long projectId);
 
     ResponseDto updateById(Long userId, Long projectId, ProjectUpdateDto dto);
 
-    List<Project> search(Long userId, String projectName);
+    List<ProjectResponseDto> search(Long userId, String projectName);
 }

@@ -1,6 +1,7 @@
 package com.example.TaskHive.service.service_implementation;
 
 import com.example.TaskHive.dto.ProjectPostDto;
+import com.example.TaskHive.dto.ProjectResponseDto;
 import com.example.TaskHive.dto.ProjectUpdateDto;
 import com.example.TaskHive.dto.ResponseDto;
 import com.example.TaskHive.entity.Project;
@@ -17,6 +18,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class ProjectServiceImplementation implements ProjectService
@@ -60,17 +62,19 @@ public class ProjectServiceImplementation implements ProjectService
 
     @Override
     @Transactional
-    public List<Project> getAllProjects(Long userId)
+    public List<ProjectResponseDto> getAllProjects(Long userId)
     {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ResourceNotFound("User not found"));
 
-        return user.getProjects();
+        return user.getProjects().stream()
+                .map(this::mapProjectEntityToDto)
+                .collect(Collectors.toList());
     }
 
     @Override
     @Transactional
-    public Project getProjectById(Long userId, Long projectId)
+    public ProjectResponseDto getProjectById(Long userId, Long projectId)
     {
         User user = userRepository.findById(userId)
                 .orElseThrow(()->new ResourceNotFound("User not found"));
@@ -83,7 +87,7 @@ public class ProjectServiceImplementation implements ProjectService
             throw new ResourceNotFound("Project not found for this user");
         }
 
-        return project;
+        return mapProjectEntityToDto(project);
     }
 
     @Override
@@ -108,7 +112,6 @@ public class ProjectServiceImplementation implements ProjectService
 
         ResponseDto responseDto = new ResponseDto();
         responseDto.setMessage("Project deleted successfully");
-
         return responseDto;
     }
 
@@ -155,17 +158,20 @@ public class ProjectServiceImplementation implements ProjectService
 
         ResponseDto responseDto = new ResponseDto();
         responseDto.setMessage("Project updated successfully");
-
         return responseDto;
     }
 
     @Override
-    public List<Project> search(Long userId, String projectName)
+    @Transactional
+    public List<ProjectResponseDto> search(Long userId, String projectName)
     {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ResourceNotFound("User not found"));
 
-        return projectRepository.findAllByUser_UserIdAndProjectNameContainingIgnoreCase(userId, projectName);
+        return projectRepository.findAllByUser_UserIdAndProjectNameContainingIgnoreCase(userId, projectName)
+                .stream()
+                .map(this::mapProjectEntityToDto)
+                .collect(Collectors.toList());
     }
 
     private Project mapProjectPostDtoToEntity(ProjectPostDto dto)
@@ -183,4 +189,19 @@ public class ProjectServiceImplementation implements ProjectService
         return project;
     }
 
+    private ProjectResponseDto mapProjectEntityToDto(Project project)
+    {
+        ProjectResponseDto dto = new ProjectResponseDto();
+        dto.setProjectId(project.getProjectId());
+        dto.setProjectName(project.getProjectName());
+        dto.setProjectDescription(project.getProjectDescription());
+        dto.setProjectType(project.getProjectType());
+        dto.setPriority(project.getPriority());
+        dto.setVisibility(project.getVisibility());
+        dto.setStartDate(project.getStartDate());
+        dto.setEndDate(project.getEndDate());
+        dto.setProjectStatus(project.getProjectStatus());
+        dto.setCreatedAt(project.getCreatedAt());
+        return dto;
+    }
 }

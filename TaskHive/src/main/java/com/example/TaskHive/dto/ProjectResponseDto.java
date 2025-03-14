@@ -1,8 +1,7 @@
-package com.example.TaskHive.entity;
+package com.example.TaskHive.dto;
 
+import com.example.TaskHive.entity.ProjectStatus;
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,24 +10,12 @@ import lombok.Setter;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-@Entity
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "project")
-public class Project
+public class ProjectResponseDto
 {
-    @Id
-    @GeneratedValue(
-            strategy = GenerationType.SEQUENCE,
-            generator = "project_id_generator"
-    )
-    @SequenceGenerator(
-            name = "project_id_generator",
-            sequenceName = "project_id_generator",
-            allocationSize = 1
-    )
     private Long projectId;
     private String projectName;
     private String projectDescription;
@@ -42,13 +29,4 @@ public class Project
     private ProjectStatus projectStatus;
     @JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss")
     private LocalDateTime createdAt;
-
-    @ManyToOne
-    @JoinColumn(
-            name = "user_id",
-            referencedColumnName = "userId"
-    )
-    @JsonIgnore
-    private User user;
-
 }
