@@ -24,49 +24,49 @@ public class ProjectController
         this.projectService = projectService;
     }
 
-    @PostMapping("/users/{user-id}/projects")
+    @PostMapping("/users/{userId}/projects")
     public ResponseEntity<ResponseDto> createProject(
-            @PathVariable("user-id") Long userId,
+            @PathVariable("userId") Long userId,
             @RequestBody ProjectPostDto dto
     ) {
         return new ResponseEntity<>(projectService.createProject(userId, dto), HttpStatus.OK);
     }
 
-    @GetMapping("/users/{user-id}/projects")
-    public ResponseEntity<List<ProjectResponseDto>> getAllProjects(@PathVariable("user-id") Long userId)
+    @GetMapping("/users/{userId}/projects")
+    public ResponseEntity<List<ProjectResponseDto>> getAllProjects(@PathVariable("userId") Long userId)
     {
         return new ResponseEntity<>(projectService.getAllProjects(userId),HttpStatus.OK);
     }
 
-    @GetMapping("/users/{user-id}/projects/{project-id}")
+    @GetMapping("/users/{userId}/projects/{projectId}")
     public ResponseEntity<ProjectResponseDto> getProjectById(
-            @PathVariable("user-id") Long userId,
-            @PathVariable("project-id")Long projectId
+            @PathVariable("userId") Long userId,
+            @PathVariable("projectId")Long projectId
     ) {
         return new ResponseEntity<>(projectService.getProjectById(userId, projectId),HttpStatus.OK);
     }
 
-    @GetMapping("/users/{user-id}/projects/search")
+    @GetMapping("/users/{userId}/projects/search")
     public ResponseEntity<List<ProjectResponseDto>> search(
-            @PathVariable("user-id") Long userId,
+            @PathVariable("userId") Long userId,
             @RequestParam String projectName
     ) {
         return new ResponseEntity<>(projectService.search(userId, projectName),HttpStatus.OK);
     }
 
-    @PutMapping("/users/{user-id}/projects/{project-id}")
+    @PutMapping("/users/{userId}/projects/{projectId}")
     public ResponseEntity<ResponseDto> updateById(
-            @PathVariable("user-id") Long userId,
-            @PathVariable("project-id") Long projectId,
+            @PathVariable("userId") Long userId,
+            @PathVariable("projectId") Long projectId,
             @RequestBody ProjectUpdateDto dto
             ) {
         return new ResponseEntity<>(projectService.updateById(userId, projectId, dto), HttpStatus.OK);
     }
 
-    @DeleteMapping("/users/{user-id}/projects/{project-id}")
+    @DeleteMapping("/users/{userId}/projects/{projectId}")
     public ResponseEntity<ResponseDto> deleteProjectById(
-            @PathVariable("user-id") Long userId,
-            @PathVariable("project-id") Long projectId
+            @PathVariable("userId") Long userId,
+            @PathVariable("projectId") Long projectId
     ) {
         return new ResponseEntity<>(projectService.deleteProjectById(userId, projectId),HttpStatus.OK);
     }

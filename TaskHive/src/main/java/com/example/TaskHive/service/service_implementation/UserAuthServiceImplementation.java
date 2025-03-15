@@ -27,6 +27,7 @@ import java.security.SecureRandom;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -102,9 +103,9 @@ public class UserAuthServiceImplementation implements UserAuthService
         if(optionalUser.isPresent())
         {
             User user = optionalUser.get();
-            if(user.getVerificationCodeExpiresAt().isAfter(LocalDateTime.now()))
+            if(user.getVerificationCodeExpiresAt() == null || user.getVerificationCodeExpiresAt().isAfter(LocalDateTime.now()))
             {
-                if(user.getVerificationCode().equals(dto.getVerificationCode()))
+                if(Objects.equals(user.getVerificationCode(), dto.getVerificationCode()))
                 {
                     user.setVerificationCode(null);
                     user.setVerificationCodeExpiresAt(null);

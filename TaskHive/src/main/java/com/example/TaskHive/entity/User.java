@@ -66,6 +66,12 @@ public class User implements UserDetails
     @JsonIgnore
     private List<Project> projects;
 
+    @OneToMany(mappedBy = "inviter")
+    private List<Invitation> sentInvitations;
+
+    @OneToMany(mappedBy = "invitee")
+    private List<Invitation> receivedInvitations;
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority("ROLE_USER"));

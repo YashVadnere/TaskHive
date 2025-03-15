@@ -10,6 +10,7 @@ import lombok.Setter;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Getter
@@ -39,6 +40,7 @@ public class Project
     private LocalDate startDate;
     @JsonFormat(pattern = "dd-MM-yyyy")
     private LocalDate endDate;
+    @Enumerated(EnumType.STRING)
     private ProjectStatus projectStatus;
     @JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss")
     private LocalDateTime createdAt;
@@ -50,5 +52,8 @@ public class Project
     )
     @JsonIgnore
     private User user;
+
+    @OneToMany(mappedBy = "project")
+    private List<Invitation> invitations;
 
 }

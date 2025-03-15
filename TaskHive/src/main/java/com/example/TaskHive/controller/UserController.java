@@ -25,14 +25,14 @@ public class UserController
         this.userService = userService;
     }
 
-    @GetMapping("/users/{user-id}")
-    public ResponseEntity<UserResponseDto> getUserById(@PathVariable("user-id") Long userId)
+    @GetMapping("/users/{userId}")
+    public ResponseEntity<UserResponseDto> getUserById(@PathVariable("userId") Long userId)
     {
         return new ResponseEntity<>(userService.getUserById(userId), HttpStatus.OK);
     }
 
-    @GetMapping("/users/{user-id}/profile-picture")
-    public ResponseEntity<byte[]> getProfilePictureById(@PathVariable("user-id") Long userId)
+    @GetMapping("/users/{userId}/profile-picture")
+    public ResponseEntity<byte[]> getProfilePictureById(@PathVariable("userId") Long userId)
     {
         return userService.getProfilePictureById(userId);
     }
@@ -43,24 +43,24 @@ public class UserController
         return new ResponseEntity<>(userService.search(fullName), HttpStatus.OK);
     }
 
-    @PutMapping("/users/{user-id}")
+    @PutMapping("/users/{userId}")
     public ResponseEntity<ResponseDto> updateProfile(
-            @PathVariable("user-id") Long userId,
+            @PathVariable("userId") Long userId,
             @RequestBody UserUpdateDto dto
     ) {
         return new ResponseEntity<>(userService.updateProfile(userId, dto), HttpStatus.OK);
     }
 
-    @PutMapping("/users/{user-id}/profile-picture")
+    @PutMapping("/users/{userId}/profile-picture")
     public ResponseEntity<ResponseDto> updateProfilePicture(
-            @PathVariable("user-id") Long userId,
+            @PathVariable("userId") Long userId,
             @RequestPart MultipartFile file
     ) {
         return new ResponseEntity<>(userService.updateProfilePicture(userId, file), HttpStatus.OK);
     }
 
-    @DeleteMapping("/users/{user-id}/profile-picture")
-    public ResponseEntity<ResponseDto> deleteProfilePicture(@PathVariable("user-id") Long userId)
+    @DeleteMapping("/users/{userId}/profile-picture")
+    public ResponseEntity<ResponseDto> deleteProfilePicture(@PathVariable("userId") Long userId)
     {
         return new ResponseEntity<>(userService.deleteProfilePicture(userId), HttpStatus.OK);
     }
