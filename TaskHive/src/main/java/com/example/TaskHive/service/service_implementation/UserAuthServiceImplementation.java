@@ -190,9 +190,9 @@ public class UserAuthServiceImplementation implements UserAuthService
 
     @Override
     @Transactional
-    public ResponseDto reverify(UserDetails userDetails)
+    public ResponseDto reverify(String email)
     {
-        Optional<User> optionalUser = userRepository.findByEmail(userDetails.getUsername());
+        Optional<User> optionalUser = userRepository.findByEmail(email);
 
         if(optionalUser.isPresent())
         {

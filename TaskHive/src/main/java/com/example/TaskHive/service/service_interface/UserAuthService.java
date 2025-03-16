@@ -15,5 +15,5 @@ public interface UserAuthService
 
     ResponseTokenDto signIn(UserSignInDto dto);
 
-    ResponseDto reverify(UserDetails userDetails);
+    ResponseDto reverify(String email);
 }
