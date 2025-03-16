@@ -8,6 +8,8 @@ import com.example.TaskHive.service.service_interface.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -43,26 +45,26 @@ public class UserController
         return new ResponseEntity<>(userService.search(fullName), HttpStatus.OK);
     }
 
-    @PutMapping("/users/{userId}")
+    @PutMapping("/users/profile")
     public ResponseEntity<ResponseDto> updateProfile(
-            @PathVariable("userId") Long userId,
+            @AuthenticationPrincipal UserDetails userDetails,
             @RequestBody UserUpdateDto dto
     ) {
-        return new ResponseEntity<>(userService.updateProfile(userId, dto), HttpStatus.OK);
+        return new ResponseEntity<>(userService.updateProfile(userDetails, dto), HttpStatus.OK);
     }
 
-    @PutMapping("/users/{userId}/profile-picture")
+    @PutMapping("/users/profile-picture")
     public ResponseEntity<ResponseDto> updateProfilePicture(
-            @PathVariable("userId") Long userId,
+            @AuthenticationPrincipal UserDetails userDetails,
             @RequestPart MultipartFile file
     ) {
-        return new ResponseEntity<>(userService.updateProfilePicture(userId, file), HttpStatus.OK);
+        return new ResponseEntity<>(userService.updateProfilePicture(userDetails, file), HttpStatus.OK);
     }
 
-    @DeleteMapping("/users/{userId}/profile-picture")
-    public ResponseEntity<ResponseDto> deleteProfilePicture(@PathVariable("userId") Long userId)
+    @DeleteMapping("/users/profile-picture")
+    public ResponseEntity<ResponseDto> deleteProfilePicture(@AuthenticationPrincipal UserDetails userDetails)
     {
-        return new ResponseEntity<>(userService.deleteProfilePicture(userId), HttpStatus.OK);
+        return new ResponseEntity<>(userService.deleteProfilePicture(userDetails), HttpStatus.OK);
     }
 
 }

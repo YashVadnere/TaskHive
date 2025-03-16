@@ -16,6 +16,7 @@ import com.example.TaskHive.service.EmailService;
 import com.example.TaskHive.service.service_interface.InvitationService;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -48,11 +49,11 @@ public class InvitationServiceImplementation implements InvitationService
 
     @Override
     @Transactional
-    public ResponseDto sendInvitation(InvitationSendRequestDto dto, Long projectId, Long senderId, Long receiverId)
+    public ResponseDto sendInvitation(InvitationSendRequestDto dto, Long projectId, UserDetails userDetails, Long receiverId)
     {
         Invitation invitation = mapInvitationSendRequestDtoToInvitationEntity(dto);
 
-        User sender = userRepository.findById(senderId)
+        User sender = userRepository.findByEmail(userDetails.getUsername())
                 .orElseThrow(() -> new ResourceNotFound("Sender not found"));
 
         User receiver = userRepository.findById(receiverId)
@@ -91,9 +92,9 @@ public class InvitationServiceImplementation implements InvitationService
 
     @Override
     @Transactional
-    public List<InvitationReceiverDto> getAllInvitationById(Long receiverId)
+    public List<InvitationReceiverDto> getAllInvitationById(UserDetails userDetails)
     {
-        User receiver = userRepository.findById(receiverId)
+        User receiver = userRepository.findByEmail(userDetails.getUsername())
                 .orElseThrow(() -> new ResourceNotFound("Receiver not found"));
 
 
@@ -106,12 +107,12 @@ public class InvitationServiceImplementation implements InvitationService
 
     @Override
     @Transactional
-    public ResponseDto invitationResponse(Long invitationId, Long receiverId, InvitationReceiverResponseDto dto)
+    public ResponseDto invitationResponse(Long invitationId, UserDetails userDetails, InvitationReceiverResponseDto dto)
     {
         Invitation invitation = invitationRepository.findById(invitationId)
                 .orElseThrow(() -> new ResourceNotFound("Invitation not found"));
 
-        User receiver = userRepository.findById(receiverId)
+        User receiver = userRepository.findByEmail(userDetails.getUsername())
                 .orElseThrow(() -> new ResourceNotFound("Receiver not found"));
 
         if (dto.getInvitationStatus() == null)

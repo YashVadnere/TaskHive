@@ -40,9 +40,9 @@ public class ProjectServiceImplementation implements ProjectService
 
     @Override
     @Transactional
-    public ResponseDto createProject(Long userId, ProjectPostDto dto)
+    public ResponseDto createProject(UserDetails userDetails, ProjectPostDto dto)
     {
-        User user =userRepository.findById(userId)
+        User user =userRepository.findByEmail(userDetails.getUsername())
                 .orElseThrow(()->new ResourceNotFound("User not found"));
 
         if(user.getNoOfProjects() >= user.getProjectLimit())
@@ -113,18 +113,19 @@ public class ProjectServiceImplementation implements ProjectService
 
     @Override
     @Transactional
-    public ResponseDto deleteProjectById(Long userId, Long projectId)
+    public ResponseDto deleteProjectById(UserDetails userDetails, Long projectId)
     {
-        User user = userRepository.findById(userId)
+        User user = userRepository.findByEmail(userDetails.getUsername())
                 .orElseThrow(() -> new ResourceNotFound("User not found"));
 
         Project project = projectRepository.findById(projectId)
                 .orElseThrow(() -> new ResourceNotFound("Project not found"));
 
-        if(!project.getUser().getUserId().equals(userId))
+        if(!project.getUser().getUserId().equals(user.getUserId()))
         {
             throw new ResourceNotFound("Project not found for this user");
         }
+
 
         user.getProjects().remove(project);
 
@@ -138,15 +139,15 @@ public class ProjectServiceImplementation implements ProjectService
 
     @Override
     @Transactional
-    public ResponseDto updateById(Long userId, Long projectId, ProjectUpdateDto dto)
+    public ResponseDto updateById(UserDetails userDetails, Long projectId, ProjectUpdateDto dto)
     {
-        User user = userRepository.findById(userId)
+        User user = userRepository.findByEmail(userDetails.getUsername())
                 .orElseThrow(() -> new ResourceNotFound("User not found"));
 
         Project project = projectRepository.findById(projectId)
                 .orElseThrow(() -> new ResourceNotFound("Project not found"));
 
-        if(!project.getUser().getUserId().equals(userId))
+        if(!project.getUser().getUserId().equals(user.getUserId()))
         {
             throw new ResourceNotFound("Project not found for this user");
         }
@@ -198,9 +199,9 @@ public class ProjectServiceImplementation implements ProjectService
 
     @Override
     @Transactional
-    public ResponseDto leaveProjectById(Long userId, Long projectId)
+    public ResponseDto leaveProjectById(UserDetails userDetails, Long projectId)
     {
-        User user = userRepository.findById(userId)
+        User user = userRepository.findByEmail(userDetails.getUsername())
                 .orElseThrow(() -> new ResourceNotFound("User not found"));
 
         Project project = projectRepository.findById(projectId)
@@ -208,7 +209,7 @@ public class ProjectServiceImplementation implements ProjectService
 
         ProjectMember projectMember = project.getProjectMembers()
                 .stream()
-                .filter(projectMember1 -> projectMember1.getUser().getUserId().equals(userId))
+                .filter(projectMember1 -> projectMember1.getUser().getUserId().equals(user.getUserId()))
                 .findFirst()
                 .orElseThrow(() -> new ResourceNotFound("User is not member of this project"));
 

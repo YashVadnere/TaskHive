@@ -17,6 +17,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -71,9 +72,9 @@ public class UserServiceImplementation implements UserService
 
     @Override
     @Transactional
-    public ResponseDto updateProfile(Long userId, UserUpdateDto dto)
+    public ResponseDto updateProfile(UserDetails userDetails, UserUpdateDto dto)
     {
-        User user = mapUserUpdateDtoToUserEntity(userId, dto);
+        User user = mapUserUpdateDtoToUserEntity(userDetails.getUsername(), dto);
 
         userRepository.save(user);
 
@@ -84,9 +85,9 @@ public class UserServiceImplementation implements UserService
     }
 
     @Override
-    public ResponseDto updateProfilePicture(Long userId, MultipartFile file)
+    public ResponseDto updateProfilePicture(UserDetails userDetails, MultipartFile file)
     {
-        User user = userRepository.findById(userId)
+        User user = userRepository.findByEmail(userDetails.getUsername())
                 .orElseThrow(() -> new ResourceNotFound("User not found"));
 
         ProfilePicture profilePicture = user.getProfilePicture();
@@ -107,7 +108,7 @@ public class UserServiceImplementation implements UserService
 
                 if(profilePicture.getDownloadUrl()==null || profilePicture.getDownloadUrl().isEmpty())
                 {
-                    String downloadUrl = "http://localhost:8080/api/v1/users/"+userId+"/profile-picture";
+                    String downloadUrl = "http://localhost:8080/api/v1/users/"+user.getUserId()+"/profile-picture";
                     profilePicture.setDownloadUrl(downloadUrl);
                 }
 
@@ -133,9 +134,9 @@ public class UserServiceImplementation implements UserService
 
     @Override
     @Transactional
-    public ResponseDto deleteProfilePicture(Long userId)
+    public ResponseDto deleteProfilePicture(UserDetails userDetails)
     {
-        User user = userRepository.findById(userId)
+        User user = userRepository.findByEmail(userDetails.getUsername())
                 .orElseThrow(() -> new ResourceNotFound("User not found"));
 
         ProfilePicture profilePicture = user.getProfilePicture();
@@ -182,9 +183,9 @@ public class UserServiceImplementation implements UserService
         return dto;
     }
 
-    private User mapUserUpdateDtoToUserEntity(Long userId, UserUpdateDto dto)
+    private User mapUserUpdateDtoToUserEntity(String email, UserUpdateDto dto)
     {
-        User user = userRepository.findById(userId)
+        User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new ResourceNotFound("User not found"));
 
         if(dto.getFirstName()!=null && !dto.getFirstName().isEmpty())

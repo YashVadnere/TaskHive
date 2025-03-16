@@ -26,12 +26,12 @@ public class ProjectController
         this.projectService = projectService;
     }
 
-    @PostMapping("/users/{userId}/projects")
+    @PostMapping("/projects")
     public ResponseEntity<ResponseDto> createProject(
-            @PathVariable("userId") Long userId,
+            @AuthenticationPrincipal UserDetails userDetails,
             @RequestBody ProjectPostDto dto
     ) {
-        return new ResponseEntity<>(projectService.createProject(userId, dto), HttpStatus.OK);
+        return new ResponseEntity<>(projectService.createProject(userDetails, dto), HttpStatus.OK);
     }
 
     @GetMapping("/users/{userId}/projects")
@@ -56,29 +56,29 @@ public class ProjectController
         return new ResponseEntity<>(projectService.search(userId, projectName),HttpStatus.OK);
     }
 
-    @PutMapping("/users/{userId}/projects/{projectId}")
+    @PutMapping("/projects/{projectId}")
     public ResponseEntity<ResponseDto> updateById(
-            @PathVariable("userId") Long userId,
+            @AuthenticationPrincipal UserDetails userDetails,
             @PathVariable("projectId") Long projectId,
             @RequestBody ProjectUpdateDto dto
             ) {
-        return new ResponseEntity<>(projectService.updateById(userId, projectId, dto), HttpStatus.OK);
+        return new ResponseEntity<>(projectService.updateById(userDetails, projectId, dto), HttpStatus.OK);
     }
 
-    @DeleteMapping("/users/{userId}/projects/{projectId}")
+    @DeleteMapping("/projects/{projectId}")
     public ResponseEntity<ResponseDto> deleteProjectById(
-            @PathVariable("userId") Long userId,
+            @AuthenticationPrincipal UserDetails userDetails,
             @PathVariable("projectId") Long projectId
     ) {
-        return new ResponseEntity<>(projectService.deleteProjectById(userId, projectId),HttpStatus.OK);
+        return new ResponseEntity<>(projectService.deleteProjectById(userDetails, projectId),HttpStatus.OK);
     }
 
-    @DeleteMapping("/users/{userId}/projects/{projectId}/memberships")
+    @DeleteMapping("/projects/{projectId}/memberships")
     public ResponseEntity<ResponseDto> leaveProjectById(
-            @PathVariable("userId") Long userId,
+            @AuthenticationPrincipal UserDetails userDetails,
             @PathVariable("projectId") Long projectId
     ) {
-        return new ResponseEntity<>(projectService.leaveProjectById(userId, projectId), HttpStatus.OK);
+        return new ResponseEntity<>(projectService.leaveProjectById(userDetails, projectId), HttpStatus.OK);
     }
 
     @DeleteMapping("/projects/{projectId}/members/{memberId}")

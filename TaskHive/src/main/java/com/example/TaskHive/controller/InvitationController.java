@@ -8,6 +8,8 @@ import com.example.TaskHive.service.service_interface.InvitationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -24,29 +26,29 @@ public class InvitationController
         this.invitationService = invitationService;
     }
 
-    @PostMapping("/invitations/projects/{projectId}/senders/{senderId}/receivers/{receiverId}")
+    @PostMapping("/projects/{projectId}/invitations/{receiverId}")
     public ResponseEntity<ResponseDto> sendInvitation(
             @RequestBody InvitationSendRequestDto dto,
             @PathVariable("projectId") Long projectId,
-            @PathVariable("senderId") Long senderId,
-            @PathVariable("receiverId") Long receiverId
+            @PathVariable("receiverId") Long receiverId,
+            @AuthenticationPrincipal UserDetails userDetails
     ) {
-        return new ResponseEntity<>(invitationService.sendInvitation(dto, projectId, senderId, receiverId), HttpStatus.OK);
+        return new ResponseEntity<>(invitationService.sendInvitation(dto, projectId, userDetails, receiverId), HttpStatus.OK);
     }
 
-    @GetMapping("/invitations/receivers/{receiverId}")
-    public ResponseEntity<List<InvitationReceiverDto>> getAllInvitationById(@PathVariable("receiverId") Long receiverId)
+    @GetMapping("/invitations")
+    public ResponseEntity<List<InvitationReceiverDto>> getAllInvitationById(@AuthenticationPrincipal UserDetails userDetails)
     {
-        return new ResponseEntity<>(invitationService.getAllInvitationById(receiverId), HttpStatus.OK);
+        return new ResponseEntity<>(invitationService.getAllInvitationById(userDetails), HttpStatus.OK);
     }
 
-    @PutMapping("/invitations/{invitationId}/users/{receiverId}")
+    @PutMapping("/invitations/{invitationId}")
     public ResponseEntity<ResponseDto> invitationResponse(
             @PathVariable("invitationId") Long invitationId,
-            @PathVariable("receiverId") Long receiverId,
+            @AuthenticationPrincipal UserDetails userDetails,
             @RequestBody InvitationReceiverResponseDto dto
     ) {
-        return new ResponseEntity<>(invitationService.invitationResponse(invitationId, receiverId, dto), HttpStatus.OK);
+        return new ResponseEntity<>(invitationService.invitationResponse(invitationId, userDetails, dto), HttpStatus.OK);
     }
 
 }

@@ -4,6 +4,7 @@ import com.example.TaskHive.dto.InvitationReceiverDto;
 import com.example.TaskHive.dto.InvitationReceiverResponseDto;
 import com.example.TaskHive.dto.InvitationSendRequestDto;
 import com.example.TaskHive.dto.ResponseDto;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -12,9 +13,9 @@ import java.util.List;
 public interface InvitationService
 {
 
-    ResponseDto sendInvitation(InvitationSendRequestDto dto, Long projectId, Long senderId, Long receiverId);
+    ResponseDto sendInvitation(InvitationSendRequestDto dto, Long projectId, UserDetails userDetails, Long receiverId);
 
-    List<InvitationReceiverDto> getAllInvitationById(Long receiverId);
+    List<InvitationReceiverDto> getAllInvitationById(UserDetails userDetails);
 
-    ResponseDto invitationResponse(Long invitationId, Long receiverId, InvitationReceiverResponseDto dto);
+    ResponseDto invitationResponse(Long invitationId, UserDetails userDetails, InvitationReceiverResponseDto dto);
 }

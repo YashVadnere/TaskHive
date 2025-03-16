@@ -5,6 +5,7 @@ import com.example.TaskHive.dto.UserResponseDto;
 import com.example.TaskHive.dto.UserSearchDto;
 import com.example.TaskHive.dto.UserUpdateDto;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -18,11 +19,11 @@ public interface UserService
 
     ResponseEntity<byte[]> getProfilePictureById(Long userId);
 
-    ResponseDto updateProfile(Long userId, UserUpdateDto dto);
+    ResponseDto updateProfile(UserDetails userDetails, UserUpdateDto dto);
 
-    ResponseDto updateProfilePicture(Long userId, MultipartFile file);
+    ResponseDto updateProfilePicture(UserDetails userDetails, MultipartFile file);
 
-    ResponseDto deleteProfilePicture(Long userId);
+    ResponseDto deleteProfilePicture(UserDetails userDetails);
 
     List<UserSearchDto> search(String fullName);
 }

@@ -14,19 +14,19 @@ import java.util.List;
 public interface ProjectService
 {
 
-    ResponseDto createProject(Long userId, ProjectPostDto dto);
+    ResponseDto createProject(UserDetails userDetails, ProjectPostDto dto);
 
     List<ProjectResponseDto> getAllProjects(Long userId);
 
     ProjectResponseDto getProjectById(Long userId, Long projectId);
 
-    ResponseDto deleteProjectById(Long userId, Long projectId);
+    ResponseDto deleteProjectById(UserDetails userDetails, Long projectId);
 
-    ResponseDto updateById(Long userId, Long projectId, ProjectUpdateDto dto);
+    ResponseDto updateById(UserDetails userDetails, Long projectId, ProjectUpdateDto dto);
 
     List<ProjectResponseDto> search(Long userId, String projectName);
 
-    ResponseDto leaveProjectById(Long userId, Long projectId);
+    ResponseDto leaveProjectById(UserDetails userDetails, Long projectId);
 
     ResponseDto removeTeamMember(Long projectId, Long memberId, UserDetails userDetails);
 }

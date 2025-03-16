@@ -57,7 +57,7 @@ public class Project
     @OneToMany(mappedBy = "project")
     private List<Invitation> invitations = new ArrayList<>();
 
-    @OneToMany(mappedBy = "project")
+    @OneToMany(mappedBy = "project", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<ProjectMember> projectMembers = new ArrayList<>();
 
 }
