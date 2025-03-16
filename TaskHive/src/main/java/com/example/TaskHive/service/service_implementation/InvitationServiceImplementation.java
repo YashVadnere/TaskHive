@@ -4,14 +4,12 @@ import com.example.TaskHive.dto.InvitationReceiverDto;
 import com.example.TaskHive.dto.InvitationReceiverResponseDto;
 import com.example.TaskHive.dto.InvitationSendRequestDto;
 import com.example.TaskHive.dto.ResponseDto;
-import com.example.TaskHive.entity.Invitation;
-import com.example.TaskHive.entity.InvitationStatus;
-import com.example.TaskHive.entity.Project;
-import com.example.TaskHive.entity.User;
+import com.example.TaskHive.entity.*;
 import com.example.TaskHive.exceptions.BadRequestException;
 import com.example.TaskHive.exceptions.Mismatch;
 import com.example.TaskHive.exceptions.ResourceNotFound;
 import com.example.TaskHive.repository.InvitationRepository;
+import com.example.TaskHive.repository.ProjectMemberRepository;
 import com.example.TaskHive.repository.ProjectRepository;
 import com.example.TaskHive.repository.UserRepository;
 import com.example.TaskHive.service.EmailService;
@@ -31,18 +29,21 @@ public class InvitationServiceImplementation implements InvitationService
     private final UserRepository userRepository;
     private final ProjectRepository projectRepository;
     private final EmailService emailService;
+    private final ProjectMemberRepository projectMemberRepository;
 
     @Autowired
     public InvitationServiceImplementation(
             InvitationRepository invitationRepository,
             UserRepository userRepository,
             ProjectRepository projectRepository,
-            EmailService emailService
+            EmailService emailService,
+            ProjectMemberRepository projectMemberRepository
     ) {
         this.invitationRepository = invitationRepository;
         this.userRepository = userRepository;
         this.projectRepository = projectRepository;
         this.emailService = emailService;
+        this.projectMemberRepository = projectMemberRepository;
     }
 
     @Override
@@ -104,6 +105,7 @@ public class InvitationServiceImplementation implements InvitationService
     }
 
     @Override
+    @Transactional
     public ResponseDto invitationResponse(Long invitationId, Long receiverId, InvitationReceiverResponseDto dto)
     {
         Invitation invitation = invitationRepository.findById(invitationId)
@@ -126,6 +128,12 @@ public class InvitationServiceImplementation implements InvitationService
 
         if(dto.getInvitationStatus() == InvitationStatus.ACCEPTED)
         {
+            ProjectMember projectMember = new ProjectMember();
+            projectMember.setRole(invitation.getRole());
+            projectMember.setJoinedAt(LocalDateTime.now());
+            projectMember.setUser(receiver);
+            projectMember.setProject(invitation.getProject());
+            projectMemberRepository.save(projectMember);
             responseDto.setMessage("Invitation Accepted");
             return responseDto;
         }

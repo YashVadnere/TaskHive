@@ -24,4 +24,6 @@ public interface ProjectService
     ResponseDto updateById(Long userId, Long projectId, ProjectUpdateDto dto);
 
     List<ProjectResponseDto> search(Long userId, String projectName);
+
+    ResponseDto leaveProjectById(Long userId, Long projectId);
 }

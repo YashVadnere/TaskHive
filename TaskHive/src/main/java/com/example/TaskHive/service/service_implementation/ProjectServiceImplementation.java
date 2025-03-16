@@ -4,11 +4,10 @@ import com.example.TaskHive.dto.ProjectPostDto;
 import com.example.TaskHive.dto.ProjectResponseDto;
 import com.example.TaskHive.dto.ProjectUpdateDto;
 import com.example.TaskHive.dto.ResponseDto;
-import com.example.TaskHive.entity.Project;
-import com.example.TaskHive.entity.ProjectStatus;
-import com.example.TaskHive.entity.User;
+import com.example.TaskHive.entity.*;
 import com.example.TaskHive.exceptions.ProjectLimitExceeded;
 import com.example.TaskHive.exceptions.ResourceNotFound;
+import com.example.TaskHive.repository.ProjectMemberRepository;
 import com.example.TaskHive.repository.ProjectRepository;
 import com.example.TaskHive.repository.UserRepository;
 import com.example.TaskHive.service.service_interface.ProjectService;
@@ -25,14 +24,17 @@ public class ProjectServiceImplementation implements ProjectService
 {
     private final UserRepository userRepository;
     private final ProjectRepository projectRepository;
+    private final ProjectMemberRepository projectMemberRepository;
 
     @Autowired
     public ProjectServiceImplementation(
             UserRepository userRepository,
-            ProjectRepository projectRepository
+            ProjectRepository projectRepository,
+            ProjectMemberRepository projectMemberRepository
     ) {
         this.userRepository = userRepository;
         this.projectRepository = projectRepository;
+        this.projectMemberRepository = projectMemberRepository;
     }
 
     @Override
@@ -52,8 +54,20 @@ public class ProjectServiceImplementation implements ProjectService
         project.setUser(user);
         user.getProjects().add(project);
 
+        ProjectMember projectMember = new ProjectMember();
+
+        projectMember.setRole(Role.SCRUM_MASTER);
+        projectMember.setJoinedAt(LocalDateTime.now());
+
+        projectMember.setUser(user);
+        projectMember.setProject(project);
+
+        project.getProjectMembers().add(projectMember);
+        user.getProjectMembers().add(projectMember);
+
         projectRepository.save(project);
         userRepository.save(user);
+        projectMemberRepository.save(projectMember);
 
         ResponseDto responseDto = new ResponseDto();
         responseDto.setMessage("Project created");
@@ -62,14 +76,17 @@ public class ProjectServiceImplementation implements ProjectService
 
     @Override
     @Transactional
-    public List<ProjectResponseDto> getAllProjects(Long userId)
-    {
+    public List<ProjectResponseDto> getAllProjects(Long userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ResourceNotFound("User not found"));
 
-        return user.getProjects().stream()
-                .map(this::mapProjectEntityToDto)
-                .collect(Collectors.toList());
+        return user.getProjectMembers()
+                .stream()
+                .map(ProjectMember::getProject)
+                .map(project -> mapProjectEntityToDto(project, user))
+                .distinct()
+                .toList();
+
     }
 
     @Override
@@ -77,17 +94,20 @@ public class ProjectServiceImplementation implements ProjectService
     public ProjectResponseDto getProjectById(Long userId, Long projectId)
     {
         User user = userRepository.findById(userId)
-                .orElseThrow(()->new ResourceNotFound("User not found"));
+                .orElseThrow(() -> new ResourceNotFound("User not found"));
 
         Project project = projectRepository.findById(projectId)
-                .orElseThrow(()->new ResourceNotFound("Project not found"));
+                .orElseThrow(() -> new ResourceNotFound("Project not found"));
 
-        if(!project.getUser().getUserId().equals(userId))
-        {
-            throw new ResourceNotFound("Project not found for this user");
+        boolean isMember = project.getProjectMembers()
+                .stream()
+                .anyMatch(member -> member.getUser().getUserId().equals(userId));
+
+        if (!isMember) {
+            throw new ResourceNotFound("User does not have access to this project");
         }
 
-        return mapProjectEntityToDto(project);
+        return mapProjectEntityToDto(project, user);
     }
 
     @Override
@@ -128,7 +148,6 @@ public class ProjectServiceImplementation implements ProjectService
         {
             throw new ResourceNotFound("Project not found for this user");
         }
-
         if(dto.getProjectName()!=null && !dto.getProjectName().isEmpty())
         {
             project.setProjectName(dto.getProjectName());
@@ -168,12 +187,47 @@ public class ProjectServiceImplementation implements ProjectService
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ResourceNotFound("User not found"));
 
-        return projectRepository.findAllByUser_UserIdAndProjectNameContainingIgnoreCase(userId, projectName)
-                .stream()
-                .map(this::mapProjectEntityToDto)
+        return user.getProjectMembers().stream()
+                .map(ProjectMember::getProject)
+                .filter(project -> project.getProjectName().toLowerCase().contains(projectName.toLowerCase()))
+                .map(project -> mapProjectEntityToDto(project, user))
                 .collect(Collectors.toList());
     }
 
+    @Override
+    @Transactional
+    public ResponseDto leaveProjectById(Long userId, Long projectId)
+    {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ResourceNotFound("User not found"));
+
+        Project project = projectRepository.findById(projectId)
+                .orElseThrow(() -> new ResourceNotFound("Project not found"));
+
+        ProjectMember projectMember = project.getProjectMembers()
+                .stream()
+                .filter(projectMember1 -> projectMember1.getUser().getUserId().equals(userId))
+                .findFirst()
+                .orElseThrow(() -> new ResourceNotFound("User is not member of this project"));
+
+        if (projectMember.getRole() == Role.SCRUM_MASTER)
+        {
+            throw new IllegalStateException("SCRUM_MASTER cannot leave");
+        }
+
+        project.getProjectMembers().remove(projectMember);
+        user.getProjectMembers().remove(projectMember);
+
+        projectMemberRepository.delete(projectMember);
+        projectRepository.save(project);
+        userRepository.save(user);
+
+        ResponseDto responseDto = new ResponseDto();
+        responseDto.setMessage("Successfully left the project");
+        return responseDto;
+    }
+
+    @Transactional
     private Project mapProjectPostDtoToEntity(ProjectPostDto dto)
     {
         Project project = new Project();
@@ -189,7 +243,8 @@ public class ProjectServiceImplementation implements ProjectService
         return project;
     }
 
-    private ProjectResponseDto mapProjectEntityToDto(Project project)
+    @Transactional
+    private ProjectResponseDto mapProjectEntityToDto(Project project, User user)
     {
         ProjectResponseDto dto = new ProjectResponseDto();
         dto.setProjectId(project.getProjectId());
@@ -198,6 +253,10 @@ public class ProjectServiceImplementation implements ProjectService
         dto.setProjectType(project.getProjectType());
         dto.setPriority(project.getPriority());
         dto.setVisibility(project.getVisibility());
+        project.getProjectMembers().stream()
+                .filter(member -> member.getUser().getUserId().equals(user.getUserId()))
+                .findFirst()
+                .ifPresent(member -> dto.setRole(member.getRole()));
         dto.setStartDate(project.getStartDate());
         dto.setEndDate(project.getEndDate());
         dto.setProjectStatus(project.getProjectStatus());

@@ -13,6 +13,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -60,17 +61,20 @@ public class User implements UserDetails
 
     @OneToMany(mappedBy = "user")
     @JsonIgnore
-    private List<Token> tokens;
+    private List<Token> tokens = new ArrayList<>();
 
     @OneToMany(mappedBy = "user")
     @JsonIgnore
-    private List<Project> projects;
+    private List<Project> projects = new ArrayList<>();
 
     @OneToMany(mappedBy = "inviter")
-    private List<Invitation> sentInvitations;
+    private List<Invitation> sentInvitations = new ArrayList<>();
 
     @OneToMany(mappedBy = "invitee")
-    private List<Invitation> receivedInvitations;
+    private List<Invitation> receivedInvitations = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user")
+    public List<ProjectMember> projectMembers = new ArrayList<>();
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

@@ -1,6 +1,7 @@
 package com.example.TaskHive.dto;
 
 import com.example.TaskHive.entity.ProjectStatus;
+import com.example.TaskHive.entity.Role;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -27,6 +28,8 @@ public class ProjectResponseDto
     @JsonFormat(pattern = "dd-MM-yyyy")
     private LocalDate endDate;
     private ProjectStatus projectStatus;
+    private String createdBy;
+    private Role role;
     @JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss")
     private LocalDateTime createdAt;
 }
