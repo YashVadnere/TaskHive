@@ -71,7 +71,7 @@ public class ProjectController
         return new ResponseEntity<>(projectService.deleteProjectById(userId, projectId),HttpStatus.OK);
     }
 
-    @DeleteMapping("/users/{userId}/projects/{projectId}")
+    @DeleteMapping("/users/{userId}/projects/{projectId}/memberships")
     public ResponseEntity<ResponseDto> leaveProjectById(
             @PathVariable("userId") Long userId,
             @PathVariable("projectId") Long projectId
