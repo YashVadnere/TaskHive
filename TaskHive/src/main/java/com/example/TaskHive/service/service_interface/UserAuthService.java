@@ -1,6 +1,7 @@
 package com.example.TaskHive.service.service_interface;
 
 import com.example.TaskHive.dto.*;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -14,5 +15,5 @@ public interface UserAuthService
 
     ResponseTokenDto signIn(UserSignInDto dto);
 
-    ResponseDto reverify(String email);
+    ResponseDto reverify(UserDetails userDetails);
 }

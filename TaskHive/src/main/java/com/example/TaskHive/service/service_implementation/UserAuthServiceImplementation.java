@@ -18,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -189,9 +190,9 @@ public class UserAuthServiceImplementation implements UserAuthService
 
     @Override
     @Transactional
-    public ResponseDto reverify(String email)
+    public ResponseDto reverify(UserDetails userDetails)
     {
-        Optional<User> optionalUser = userRepository.findByEmail(email);
+        Optional<User> optionalUser = userRepository.findByEmail(userDetails.getUsername());
 
         if(optionalUser.isPresent())
         {
@@ -267,28 +268,186 @@ public class UserAuthServiceImplementation implements UserAuthService
     {
         String to = user.getEmail();
         String subject = "Account Verification";
-        String htmlText = "<html>\n" +
-                "  <body>\n" +
-                "    <table width=\"100%\" border=\"0\" cellspacing=\"0\" cellpadding=\"0\">\n" +
-                "      <tr>\n" +
-                "        <td align=\"center\">\n" +
-                "          <table width=\"600\" border=\"0\" cellspacing=\"0\" cellpadding=\"10\">\n" +
-                "            <tr>\n" +
-                "              <td align=\"center\">\n" +
-                "                <h2>Welcome, <strong>"+user.getFullName()+"</strong> </h2>\n" +
-                "                <p>Thank you for signing up! Please use the verification code below to verify your email address.</p>\n" +
-                "                <h3>Your Verification Code:</h3>\n" +
-                "                <h1>"+user.getVerificationCode()+"</h1>\n" +
-                "                <p>This code will expire in 2 minutes. If you did not request this, please ignore this email.</p>\n" +
-                "                <p>Best Regards, <br> TaskHive Team</p>\n" +
-                "              </td>\n" +
-                "            </tr>\n" +
-                "          </table>\n" +
-                "        </td>\n" +
-                "      </tr>\n" +
-                "    </table>\n" +
-                "  </body>\n" +
-                "</html>\n";
+        String htmlText = "<!DOCTYPE html>\n" +
+                "<html lang=\"en\">\n" +
+                "\n" +
+                "<head>\n" +
+                "    <meta charset=\"UTF-8\">\n" +
+                "    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n" +
+                "    <title>TaskHive | Verify Your Email</title>\n" +
+                "\n" +
+                "    <link href=\"https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap\" rel=\"stylesheet\" />\n" +
+                "\n" +
+                "    <style>\n" +
+                "        body {\n" +
+                "            font-family: 'Poppins', sans-serif;\n" +
+                "            background: #f0f9ff;\n" +
+                "            padding: 20px;\n" +
+                "            margin: 0;\n" +
+                "        }\n" +
+                "\n" +
+                "        .container {\n" +
+                "            background: #ffffff;\n" +
+                "            border-radius: 24px;\n" +
+                "            border: 1px solid #d1d5db;\n" +
+                "            max-width: 600px;\n" +
+                "            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);\n" +
+                "            overflow: hidden;\n" +
+                "            margin: 0 auto;\n" +
+                "            display: block;\n" +
+                "        }\n" +
+                "\n" +
+                "        .header {\n" +
+                "            background: linear-gradient(to right, #60a5fa, #93c5fd);\n" +
+                "            color: #ffffff;\n" +
+                "            padding: 24px;\n" +
+                "            text-align: center;\n" +
+                "            border-bottom: 1px solid #bfdbfe;\n" +
+                "        }\n" +
+                "\n" +
+                "        .header h1 {\n" +
+                "            font-size: 28px;\n" +
+                "            margin: 0;\n" +
+                "        }\n" +
+                "\n" +
+                "        .header p {\n" +
+                "            margin: 8px 0 0;\n" +
+                "            font-size: 14px;\n" +
+                "        }\n" +
+                "\n" +
+                "        .content {\n" +
+                "            padding: 40px 32px;\n" +
+                "            color: #1f2937;\n" +
+                "        }\n" +
+                "\n" +
+                "        .content h2 {\n" +
+                "            font-size: 22px;\n" +
+                "            color: #2563eb;\n" +
+                "            margin-top: 0;\n" +
+                "        }\n" +
+                "\n" +
+                "        .content p {\n" +
+                "            font-size: 14px;\n" +
+                "            color: #6b7280;\n" +
+                "            line-height: 1.5;\n" +
+                "        }\n" +
+                "\n" +
+                "       .code-box {\n" +
+                "    background-color: #eff6ff; /* light blue background */\n" +
+                "    border: 1px solid #93c5fd; /* soft blue border */\n" +
+                "    border-radius: 16px; /* rounded corners */\n" +
+                "    text-align: center;\n" +
+                "    padding: 24px 32px; /* vertical and horizontal padding */\n" +
+                "    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* subtle shadow */\n" +
+                "    margin-bottom: 24px; /* space below the box */\n" +
+                "    max-width: 400px;\n" +
+                "    margin-left: auto;\n" +
+                "    margin-right: auto;\n" +
+                "}\n" +
+                "\n" +
+                ".code-box .code-title {\n" +
+                "    font-size: 12px; /* small text */\n" +
+                "    color: #6b7280; /* gray color */\n" +
+                "    text-transform: uppercase;\n" +
+                "    margin-bottom: 8px;\n" +
+                "    letter-spacing: 0.1em; /* wider spacing */\n" +
+                "}\n" +
+                "\n" +
+                ".code-box .code {\n" +
+                "    font-size: 48px; /* large code */\n" +
+                "    font-weight: 800;\n" +
+                "    letter-spacing: 2px; /* wider letter spacing */\n" +
+                "    color: #2563eb; /* bright blue */\n" +
+                "}\n" +
+                "\n" +
+                ".code-box .expire {\n" +
+                "    font-size: 12px;\n" +
+                "    color: #6b7280; /* gray text */\n" +
+                "    margin-top: 12px;\n" +
+                "}\n" +
+                "\n" +
+                "        .expire {\n" +
+                "            font-size: 12px;\n" +
+                "            color: #6b7280;\n" +
+                "            margin-top: 12px;\n" +
+                "        }\n" +
+                "\n" +
+                "        .footer-text {\n" +
+                "            text-align: center;\n" +
+                "            font-size: 12px;\n" +
+                "            color: #9ca3af;\n" +
+                "            margin-top: 32px;\n" +
+                "            line-height: 1.4;\n" +
+                "        }\n" +
+                "\n" +
+                "        .footer {\n" +
+                "            background-color: #eff6ff;\n" +
+                "            text-align: center;\n" +
+                "            padding: 16px 32px;\n" +
+                "            font-size: 12px;\n" +
+                "            color: #6b7280;\n" +
+                "            border-top: 1px solid #e5e7eb;\n" +
+                "        }\n" +
+                "\n" +
+                "        .footer span {\n" +
+                "            color: #2563eb;\n" +
+                "            font-weight: 600;\n" +
+                "            display: block;\n" +
+                "            margin-top: 4px;\n" +
+                "        }\n" +
+                "\n" +
+                "        @media (max-width: 600px) {\n" +
+                "            .content {\n" +
+                "                padding: 24px 16px;\n" +
+                "            }\n" +
+                "\n" +
+                "            .code {\n" +
+                "                font-size: 32px;\n" +
+                "            }\n" +
+                "        }\n" +
+                "    </style>\n" +
+                "</head>\n" +
+                "\n" +
+                "<body>\n" +
+                "\n" +
+                "    <center> <!-- This ensures it’s centered in email clients -->\n" +
+                "        <div class=\"container\">\n" +
+                "\n" +
+                "            <!-- Header -->\n" +
+                "            <div class=\"header\">\n" +
+                "                <h1>TaskHive</h1>\n" +
+                "                <p>AI-Enhanced Agile Management</p>\n" +
+                "            </div>\n" +
+                "\n" +
+                "            <!-- Content -->\n" +
+                "            <div class=\"content\">\n" +
+                "                <h2>Welcome, "+ user.getFullName()+" \uD83D\uDC4B</h2>\n" +
+                "                <p>Thank you for joining <strong style=\"color:#2563eb;\">TaskHive</strong>! Please use the verification code below to activate your account.</p>\n" +
+                "\n" +
+                "                <!-- Verification Code Box -->\n" +
+                "               <div class=\"code-box\">\n" +
+                "    <p class=\"code-title\">Your Verification Code</p>\n" +
+                "    <p class=\"code\">"+user.getVerificationCode()+"</p>\n" +
+                "    <p class=\"expire\">Expires in 2 minutes.</p>\n" +
+                "</div>\n" +
+                "                <p class=\"footer-text\">\n" +
+                "                    Didn’t request this? Please ignore this email.<br>\n" +
+                "                    Need help? <a href=\"#\" style=\"color: #2563eb; text-decoration: underline;\">Contact Support</a>\n" +
+                "                </p>\n" +
+                "            </div>\n" +
+                "\n" +
+                "            <!-- Footer -->\n" +
+                "            <div class=\"footer\">\n" +
+                "                Best Regards,\n" +
+                "                <span>TaskHive Team \uD83D\uDC1D</span>\n" +
+                "            </div>\n" +
+                "\n" +
+                "        </div>\n" +
+                "    </center>\n" +
+                "\n" +
+                "</body>\n" +
+                "\n" +
+                "</html>";
 
         emailService.sendEmailToUser(to, subject, htmlText);
     }

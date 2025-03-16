@@ -13,6 +13,7 @@ import com.example.TaskHive.repository.UserRepository;
 import com.example.TaskHive.service.service_interface.ProjectService;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -136,6 +137,7 @@ public class ProjectServiceImplementation implements ProjectService
     }
 
     @Override
+    @Transactional
     public ResponseDto updateById(Long userId, Long projectId, ProjectUpdateDto dto)
     {
         User user = userRepository.findById(userId)
@@ -227,7 +229,50 @@ public class ProjectServiceImplementation implements ProjectService
         return responseDto;
     }
 
+    @Override
     @Transactional
+    public ResponseDto removeTeamMember(Long projectId, Long memberId, UserDetails userDetails)
+    {
+        User requestingUser = userRepository.findByEmail(userDetails.getUsername())
+                .orElseThrow(() -> new ResourceNotFound("User not found"));
+
+        Project project = projectRepository.findById(projectId)
+                .orElseThrow(() -> new ResourceNotFound("Project not found"));
+
+        System.out.println("User : "+userDetails.getUsername());
+        System.out.println("Password : "+userDetails.getPassword());
+
+        ProjectMember requestingProjectMember = project.getProjectMembers().stream()
+                .filter(member ->  member.getUser().getUserId().equals(requestingUser.getUserId()))
+                .findFirst()
+                .orElseThrow(() -> new ResourceNotFound("User is not member of the project"));
+
+        if(!(requestingProjectMember.getRole() == Role.SCRUM_MASTER))
+        {
+            throw new ResourceNotFound("Only the Scrum Master can remove members from the project");
+        }
+
+        ProjectMember memberToRemove = project.getProjectMembers().stream()
+                .filter(member -> member.getUser().getUserId().equals(memberId))
+                .findFirst()
+                .orElseThrow(() -> new ResourceNotFound("Member not found in this project"));
+
+        User userToBeRemoved = memberToRemove.getUser();
+
+        project.getProjectMembers().remove(memberToRemove);
+        userToBeRemoved.getProjectMembers().remove(memberToRemove);
+
+        projectRepository.save(project);
+        userRepository.save(userToBeRemoved);
+
+        projectMemberRepository.delete(memberToRemove);
+
+        ResponseDto responseDto = new ResponseDto();
+        responseDto.setMessage("User deleted successfully");
+
+        return responseDto;
+    }
+
     private Project mapProjectPostDtoToEntity(ProjectPostDto dto)
     {
         Project project = new Project();
@@ -243,7 +288,7 @@ public class ProjectServiceImplementation implements ProjectService
         return project;
     }
 
-    @Transactional
+
     private ProjectResponseDto mapProjectEntityToDto(Project project, User user)
     {
         ProjectResponseDto dto = new ProjectResponseDto();

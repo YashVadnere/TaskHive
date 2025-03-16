@@ -8,6 +8,8 @@ import com.example.TaskHive.service.service_interface.ProjectService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -77,6 +79,15 @@ public class ProjectController
             @PathVariable("projectId") Long projectId
     ) {
         return new ResponseEntity<>(projectService.leaveProjectById(userId, projectId), HttpStatus.OK);
+    }
+
+    @DeleteMapping("/projects/{projectId}/members/{memberId}")
+    public ResponseEntity<ResponseDto> removeTeamMember(
+            @PathVariable("projectId") Long projectId,
+            @PathVariable("memberId") Long memberId,
+            @AuthenticationPrincipal UserDetails userDetails
+    ) {
+        return new ResponseEntity<>(projectService.removeTeamMember(projectId, memberId, userDetails), HttpStatus.OK);
     }
 
 }

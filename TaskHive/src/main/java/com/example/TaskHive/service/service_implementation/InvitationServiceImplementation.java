@@ -148,27 +148,81 @@ public class InvitationServiceImplementation implements InvitationService
         String to = receiver.getEmail();
         String subject = "You've Received a Project Invitation!";
 
-        String htmlText = "<html>\n" +
-                "  <body>\n" +
-                "    <table width=\"100%\" border=\"0\" cellspacing=\"0\" cellpadding=\"0\">\n" +
-                "      <tr>\n" +
-                "        <td align=\"center\">\n" +
-                "          <table width=\"600\" border=\"0\" cellspacing=\"0\" cellpadding=\"10\" style=\"border: 1px solid #ddd; border-radius: 8px; background-color: #f9f9f9;\">\n" +
-                "            <tr>\n" +
-                "              <td align=\"center\" style=\"padding: 20px; font-family: Arial, sans-serif;\">\n" +
-                "                <h2 style=\"color: #0056b3;\">Project Invitation</h2>\n" +
-                "                <p>Hello <strong>" + receiver.getFullName() + "</strong>,</p>\n" +
-                "                <p>You have received an invitation from <strong>" + sender.getFullName() + "</strong> to collaborate on the project:</p>\n" +
-                "                <h3 style=\"color: #333;\">" + project.getProjectName() + "</h3>\n" +
-                "                <p>Please log in to your TaskHive account to review the details and respond.</p>\n" +
-                "                <p>Best Regards, <br><strong>TaskHive Team</strong></p>\n" +
-                "              </td>\n" +
-                "            </tr>\n" +
-                "          </table>\n" +
-                "        </td>\n" +
-                "      </tr>\n" +
+        String htmlText = "<!DOCTYPE html>\n" +
+                "<html lang=\"en\">\n" +
+                "<head>\n" +
+                "    <meta charset=\"UTF-8\">\n" +
+                "    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n" +
+                "    <title>TaskHive | Verify Your Email</title>\n" +
+                "</head>\n" +
+                "<body style=\"margin:0; padding:0; background: #f0f9ff; font-family: Arial, sans-serif; color: #333333;\">\n" +
+                "\n" +
+                "    <table align=\"center\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\" style=\"background: #f0f9ff; padding: 40px 0;\">\n" +
+                "        <tr>\n" +
+                "            <td align=\"center\">\n" +
+                "                <table cellpadding=\"0\" cellspacing=\"0\" width=\"600\" style=\"max-width: 600px; width: 100%; background-color: #ffffff; border-radius: 16px; overflow: hidden; border: 1px solid #e5e7eb; box-shadow: 0 10px 20px rgba(0,0,0,0.05);\">\n" +
+                "                    \n" +
+                "                    <!-- Header -->\n" +
+                "                    <tr>\n" +
+                "                        <td align=\"center\" style=\"background: linear-gradient(to right, #60a5fa, #93c5fd); padding: 24px;\">\n" +
+                "                            <h1 style=\"margin: 0; font-size: 28px; color: #ffffff; font-weight: 800;\">TaskHive</h1>\n" +
+                "                            <p style=\"margin: 4px 0 0; font-size: 14px; color: #ffffff;\">AI-Enhanced Agile Management</p>\n" +
+                "                        </td>\n" +
+                "                    </tr>\n" +
+                "\n" +
+                "                    <!-- Body Content -->\n" +
+                "                    <tr>\n" +
+                "                        <td style=\"padding: 40px 40px 30px; background-color: #ffffff;\">\n" +
+                "                            <h2 style=\"font-size: 24px; color: #2563eb; margin: 0 0 16px;\">Hello, "+receiver.getFullName()+" \uD83D\uDC4B</h2>\n" +
+                "                            <p style=\"color: #4b5563; font-size: 14px; line-height: 1.5; margin: 0 0 24px;\">\n" +
+                "                                You have received an invitation from <span style=\"color: #3b82f6; font-weight: 600;\">"+sender.getFullName()+"</span> to collaborate on the project:\n" +
+                "                            </p>\n" +
+                "\n" +
+                "                            <!-- Project Invitation Box -->\n" +
+                "                            <table cellpadding=\"0\" cellspacing=\"0\" width=\"100%\" style=\"background-color: #eff6ff; border: 1px solid #93c5fd; border-radius: 16px; text-align: center; margin-bottom: 24px; box-shadow: 0 5px 10px rgba(0,0,0,0.05);\">\n" +
+                "                                <tr>\n" +
+                "                                    <td style=\"padding: 24px;\">\n" +
+                "                                        <p style=\"color: #6b7280; font-size: 12px; text-transform: uppercase; margin: 0 0 8px; letter-spacing: 1px;\">Project Name</p>\n" +
+                "                                        <p style=\"color: #2563eb; font-size: 24px; font-weight: 800; margin: 0;\">"+project.getProjectName()+"</p>\n" +
+                "                                    </td>\n" +
+                "                                </tr>\n" +
+                "                            </table>\n" +
+                "\n" +
+                "                            <p style=\"color: #4b5563; font-size: 14px; line-height: 1.5; margin-bottom: 24px; text-align: center;\">\n" +
+                "                                Please log in to your TaskHive account to review the details and respond.\n" +
+                "                            </p>\n" +
+                "\n" +
+                "                            <!-- Call-to-Action Button -->\n" +
+                "                            <table align=\"center\" cellpadding=\"0\" cellspacing=\"0\" style=\"margin: 0 auto;\">\n" +
+                "                                <tr>\n" +
+                "                                    <td align=\"center\" bgcolor=\"#3b82f6\" style=\"border-radius: 12px;\">\n" +
+                "                                        \n" +
+                "                                    </td>\n" +
+                "                                </tr>\n" +
+                "                            </table>\n" +
+                "\n" +
+                "                            <!-- Info Footer -->\n" +
+                "                            <p style=\"font-size: 12px; color: #9ca3af; text-align: center; margin-top: 32px; line-height: 1.5;\">\n" +
+                "                                Didn’t expect this? Please ignore this email.<br>\n" +
+                "                                Need help? <a href=\"#\" style=\"color: #3b82f6; text-decoration: underline;\">Contact Support</a>\n" +
+                "                            </p>\n" +
+                "                        </td>\n" +
+                "                    </tr>\n" +
+                "\n" +
+                "                    <!-- Footer -->\n" +
+                "                    <tr>\n" +
+                "                        <td align=\"center\" style=\"background-color: #eff6ff; padding: 16px; font-size: 12px; color: #6b7280;\">\n" +
+                "                            Best Regards,<br>\n" +
+                "                            <span style=\"color: #2563eb; font-weight: 600; display: inline-block; margin-top: 4px;\">TaskHive Team \uD83D\uDC1D</span>\n" +
+                "                        </td>\n" +
+                "                    </tr>\n" +
+                "\n" +
+                "                </table>\n" +
+                "            </td>\n" +
+                "        </tr>\n" +
                 "    </table>\n" +
-                "  </body>\n" +
+                "\n" +
+                "</body>\n" +
                 "</html>";
 
 

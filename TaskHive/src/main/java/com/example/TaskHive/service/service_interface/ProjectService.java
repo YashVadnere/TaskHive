@@ -5,6 +5,7 @@ import com.example.TaskHive.dto.ProjectResponseDto;
 import com.example.TaskHive.dto.ProjectUpdateDto;
 import com.example.TaskHive.dto.ResponseDto;
 import com.example.TaskHive.entity.Project;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -26,4 +27,6 @@ public interface ProjectService
     List<ProjectResponseDto> search(Long userId, String projectName);
 
     ResponseDto leaveProjectById(Long userId, Long projectId);
+
+    ResponseDto removeTeamMember(Long projectId, Long memberId, UserDetails userDetails);
 }
