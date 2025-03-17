@@ -60,4 +60,7 @@ public class Project
     @OneToMany(mappedBy = "project", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<ProjectMember> projectMembers = new ArrayList<>();
 
+    @OneToOne(mappedBy = "project", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private ProductBacklog productBacklog;
+
 }

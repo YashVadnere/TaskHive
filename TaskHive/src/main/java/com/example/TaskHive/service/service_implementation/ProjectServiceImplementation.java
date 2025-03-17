@@ -7,6 +7,7 @@ import com.example.TaskHive.dto.ResponseDto;
 import com.example.TaskHive.entity.*;
 import com.example.TaskHive.exceptions.ProjectLimitExceeded;
 import com.example.TaskHive.exceptions.ResourceNotFound;
+import com.example.TaskHive.repository.ProductBacklogRepository;
 import com.example.TaskHive.repository.ProjectMemberRepository;
 import com.example.TaskHive.repository.ProjectRepository;
 import com.example.TaskHive.repository.UserRepository;
@@ -26,16 +27,19 @@ public class ProjectServiceImplementation implements ProjectService
     private final UserRepository userRepository;
     private final ProjectRepository projectRepository;
     private final ProjectMemberRepository projectMemberRepository;
+    private final ProductBacklogRepository productBacklogRepository;
 
     @Autowired
     public ProjectServiceImplementation(
             UserRepository userRepository,
             ProjectRepository projectRepository,
-            ProjectMemberRepository projectMemberRepository
+            ProjectMemberRepository projectMemberRepository,
+            ProductBacklogRepository productBacklogRepository
     ) {
         this.userRepository = userRepository;
         this.projectRepository = projectRepository;
         this.projectMemberRepository = projectMemberRepository;
+        this.productBacklogRepository = productBacklogRepository;
     }
 
     @Override
@@ -66,9 +70,14 @@ public class ProjectServiceImplementation implements ProjectService
         project.getProjectMembers().add(projectMember);
         user.getProjectMembers().add(projectMember);
 
+        ProductBacklog productBacklog = new ProductBacklog();
+        productBacklog.setProductBacklogStatus(ProductBacklogStatus.EMPTY);
+        productBacklog.setProject(project);
+
         projectRepository.save(project);
         userRepository.save(user);
         projectMemberRepository.save(projectMember);
+        productBacklogRepository.save(productBacklog);
 
         ResponseDto responseDto = new ResponseDto();
         responseDto.setMessage("Project created");
