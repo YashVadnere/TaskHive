@@ -2,6 +2,7 @@ package com.example.TaskHive.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -62,5 +63,9 @@ public class Project
 
     @OneToOne(mappedBy = "project", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private ProductBacklog productBacklog;
+
+    @OneToMany(mappedBy = "project")
+    @JsonManagedReference
+    private List<Epic> epics = new ArrayList<>();
 
 }

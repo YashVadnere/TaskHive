@@ -75,6 +75,10 @@ public class User implements UserDetails
     @OneToMany(mappedBy = "user")
     public List<ProjectMember> projectMembers = new ArrayList<>();
 
+    @OneToMany(mappedBy = "user")
+    @JsonManagedReference
+    private List<Epic> epics = new ArrayList<>();
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority("ROLE_USER"));
