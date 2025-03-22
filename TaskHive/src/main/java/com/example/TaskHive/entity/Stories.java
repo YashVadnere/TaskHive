@@ -2,7 +2,6 @@ package com.example.TaskHive.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -10,34 +9,44 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Entity
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "epics")
-public class Epic
+@Table(name = "stories")
+public class Stories
 {
     @Id
     @GeneratedValue(
             strategy = GenerationType.SEQUENCE,
-            generator = "epic_id_generator"
+            generator = "stories_id_generator"
     )
     @SequenceGenerator(
-            name = "epic_id_generator",
-            sequenceName = "epic_id_generator",
+            name = "stories_id_generator",
+            sequenceName = "stories_id_generator",
             allocationSize = 1
     )
-    private Long epicId;
+    private Long storiesId;
     private String title;
     private String description;
-    private String priority;
+    private String storiesPriority;
+    private Integer storiesPoint;
+    @Enumerated(EnumType.STRING)
+    private Status storiesStatus;
     @JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss")
     private LocalDateTime createdAt;
     @JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss")
     private LocalDateTime updatedAt;
+
+    @ManyToOne
+    @JoinColumn(
+            name = "epic_id",
+            referencedColumnName = "epicId"
+    )
+    @JsonBackReference
+    private Epic epic;
 
     @ManyToOne
     @JoinColumn(
@@ -46,25 +55,5 @@ public class Epic
     )
     @JsonBackReference
     private User user;
-
-    @ManyToOne
-    @JoinColumn(
-            name = "project_id",
-            referencedColumnName = "projectId"
-    )
-    @JsonBackReference
-    private Project project;
-
-    @ManyToOne
-    @JoinColumn(
-            name = "product_backlog_id",
-            referencedColumnName = "productBacklogId"
-    )
-    @JsonBackReference
-    private ProductBacklog productBacklog;
-
-    @OneToMany(mappedBy = "epic", cascade = CascadeType.REMOVE, orphanRemoval = true)
-    @JsonManagedReference
-    private List<Stories> stories;
 
 }
