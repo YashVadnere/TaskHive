@@ -12,7 +12,6 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
-import java.nio.file.Path;
 import java.util.List;
 
 @RestController
@@ -32,7 +31,7 @@ public class StoriesController
             @PathVariable("epicId") Long epicId,
             @RequestBody StoriesPostDto dto,
             @AuthenticationPrincipal UserDetails userDetails
-            ) {
+    ) {
         return new ResponseEntity<>(storiesService.create(epicId, dto, userDetails), HttpStatus.OK);
     }
 

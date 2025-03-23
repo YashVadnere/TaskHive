@@ -9,57 +9,58 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "stories")
-public class Stories
+@Table(name = "tasks")
+public class Task
 {
     @Id
     @GeneratedValue(
             strategy = GenerationType.SEQUENCE,
-            generator = "stories_id_generator"
+            generator = "task_id_generator"
     )
     @SequenceGenerator(
-            name = "stories_id_generator",
-            sequenceName = "stories_id_generator",
-            allocationSize = 1
+            name = "task_id_generator",
+            sequenceName = "task_id_generator",
+            allocationSize =1
     )
-    private Long storiesId;
+    private Long taskId;
     private String title;
     private String description;
-    private String storiesPriority;
-    private Integer storiesPoint;
-    @Enumerated(EnumType.STRING)
-    private Status storiesStatus;
+    private String taskPriority;
+    private Integer taskPoint;
     @JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss")
     private LocalDateTime createdAt;
     @JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss")
     private LocalDateTime updatedAt;
+    @Enumerated(EnumType.STRING)
+    private Status status;
 
     @ManyToOne
     @JoinColumn(
-            name = "epic_id",
-            referencedColumnName = "epicId"
-    )
-    @JsonBackReference
-    private Epic epic;
-
-    @ManyToOne
-    @JoinColumn(
-            name = "user_id",
+            name = "created_by_id",
             referencedColumnName = "userId"
     )
     @JsonBackReference
-    private User user;
+    private User createdBy;
 
-    @OneToMany(mappedBy = "stories", cascade = CascadeType.REMOVE)
+    @ManyToOne
+    @JoinColumn(
+            name = "assigned_to_id",
+            referencedColumnName = "userId"
+    )
+    private User assignedTo;
+
+    @ManyToOne
+    @JoinColumn(
+            name = "stories_id",
+            referencedColumnName = "StoriesId"
+    )
     @JsonBackReference
-    private List<Task> tasks = new ArrayList<>();
+    private Stories stories;
 
 }

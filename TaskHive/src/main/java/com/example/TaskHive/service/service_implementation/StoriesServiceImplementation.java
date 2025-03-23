@@ -154,7 +154,7 @@ public class StoriesServiceImplementation implements StoriesService
         {
             stories.setStoriesStatus(dto.getStoriesStatus());
         }
-
+        stories.setUpdatedAt(LocalDateTime.now());
         storiesRepository.save(stories);
 
         ResponseDto responseDto = new ResponseDto();
