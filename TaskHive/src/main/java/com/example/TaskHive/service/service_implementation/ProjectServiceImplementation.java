@@ -304,7 +304,8 @@ public class ProjectServiceImplementation implements ProjectService
                 .map(member -> new ProjectMemberDto(
                         member.getUser().getUserId(),
                         member.getUser().getFullName(),
-                        member.getUser().getEmail()
+                        member.getUser().getEmail(),
+                        member.getRole()
                 ))
                 .toList();
     }

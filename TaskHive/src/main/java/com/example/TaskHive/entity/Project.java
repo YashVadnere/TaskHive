@@ -55,17 +55,41 @@ public class Project
     @JsonIgnore
     private User user;
 
-    @OneToMany(mappedBy = "project")
+    @OneToMany(
+            mappedBy = "project",
+            cascade = CascadeType.REMOVE,
+            orphanRemoval = true
+    )
     private List<Invitation> invitations = new ArrayList<>();
 
-    @OneToMany(mappedBy = "project", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    @OneToMany(
+            mappedBy = "project",
+            cascade = CascadeType.REMOVE,
+            orphanRemoval = true
+    )
     private List<ProjectMember> projectMembers = new ArrayList<>();
 
-    @OneToOne(mappedBy = "project", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    @OneToOne(
+            mappedBy = "project",
+            cascade = CascadeType.REMOVE,
+            orphanRemoval = true
+    )
     private ProductBacklog productBacklog;
 
-    @OneToMany(mappedBy = "project")
+    @OneToMany(
+            mappedBy = "project",
+            cascade = CascadeType.REMOVE,
+            orphanRemoval = true
+    )
     @JsonManagedReference
     private List<Epic> epics = new ArrayList<>();
+
+    @OneToMany(
+            mappedBy = "project",
+            cascade = CascadeType.REMOVE,
+            orphanRemoval = true
+    )
+    @JsonManagedReference
+    private List<Sprint> sprints;
 
 }

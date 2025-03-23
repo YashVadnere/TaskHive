@@ -14,6 +14,7 @@ import com.example.TaskHive.repository.EpicRepository;
 import com.example.TaskHive.repository.StoriesRepository;
 import com.example.TaskHive.repository.UserRepository;
 import com.example.TaskHive.service.service_interface.StoriesService;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
@@ -41,6 +42,7 @@ public class StoriesServiceImplementation implements StoriesService
     }
 
     @Override
+    @Transactional
     public ResponseDto create(Long epicId, StoriesPostDto dto, UserDetails userDetails)
     {
         User user = userRepository.findByEmail(userDetails.getUsername())
@@ -68,6 +70,7 @@ public class StoriesServiceImplementation implements StoriesService
     }
 
     @Override
+    @Transactional
     public List<StoriesGetDto> getAllStories(Long epicId, UserDetails userDetails)
     {
         User user = userRepository.findByEmail(userDetails.getUsername())
@@ -88,6 +91,7 @@ public class StoriesServiceImplementation implements StoriesService
     }
 
     @Override
+    @Transactional
     public StoriesGetDto getStoriesById(Long epicId, Long storiesId, UserDetails userDetails)
     {
         User user = userRepository.findByEmail(userDetails.getUsername())
@@ -113,6 +117,7 @@ public class StoriesServiceImplementation implements StoriesService
     }
 
     @Override
+    @Transactional
     public ResponseDto updateStoriesById(Long epicId, Long storiesId, StoriesPutDto dto, UserDetails userDetails)
     {
         User user = userRepository.findByEmail(userDetails.getUsername())
@@ -163,6 +168,7 @@ public class StoriesServiceImplementation implements StoriesService
     }
 
     @Override
+    @Transactional
     public ResponseDto deleteStoriesById(Long epicId, Long storiesId, UserDetails userDetails)
     {
         User user = userRepository.findByEmail(userDetails.getUsername())

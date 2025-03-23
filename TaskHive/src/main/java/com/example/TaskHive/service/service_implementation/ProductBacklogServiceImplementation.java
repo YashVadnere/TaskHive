@@ -12,6 +12,7 @@ import com.example.TaskHive.repository.ProductBacklogRepository;
 import com.example.TaskHive.repository.ProjectRepository;
 import com.example.TaskHive.repository.UserRepository;
 import com.example.TaskHive.service.service_interface.ProductBacklogService;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
@@ -35,6 +36,7 @@ public class ProductBacklogServiceImplementation implements ProductBacklogServic
     }
 
     @Override
+    @Transactional
     public ProductBacklogDto getProductBacklogs(Long projectId, UserDetails userDetails)
     {
         User user = userRepository.findByEmail(userDetails.getUsername())

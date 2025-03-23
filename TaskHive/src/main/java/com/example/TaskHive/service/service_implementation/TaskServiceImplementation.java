@@ -13,6 +13,7 @@ import com.example.TaskHive.repository.StoriesRepository;
 import com.example.TaskHive.repository.TaskRepository;
 import com.example.TaskHive.repository.UserRepository;
 import com.example.TaskHive.service.service_interface.TaskService;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
@@ -41,6 +42,7 @@ public class TaskServiceImplementation implements TaskService
     }
 
     @Override
+    @Transactional
     public ResponseDto create(Long storiesId, TaskPostDto dto, UserDetails userDetails)
     {
         User creator = userRepository.findByEmail(userDetails.getUsername())
@@ -67,6 +69,7 @@ public class TaskServiceImplementation implements TaskService
     }
 
     @Override
+    @Transactional
     public List<TaskGetDto> getAllTasks(Long storiesId, UserDetails userDetails)
     {
         Stories stories = storiesRepository.findById(storiesId)
@@ -79,6 +82,7 @@ public class TaskServiceImplementation implements TaskService
     }
 
     @Override
+    @Transactional
     public TaskGetDto getTaskById(Long storiesId, Long taskId, UserDetails userDetails)
     {
         User user = userRepository.findByEmail(userDetails.getUsername())
@@ -99,6 +103,7 @@ public class TaskServiceImplementation implements TaskService
     }
 
     @Override
+    @Transactional
     public ResponseDto update(Long storiesId, Long taskId, TaskPutDto dto, UserDetails userDetails)
     {
         Stories stories = storiesRepository.findById(storiesId)
@@ -151,6 +156,7 @@ public class TaskServiceImplementation implements TaskService
     }
 
     @Override
+    @Transactional
     public ResponseDto deleteTaskById(Long storiesId, Long taskId, UserDetails userDetails)
     {
         User user = userRepository.findByEmail(userDetails.getUsername())
@@ -196,6 +202,7 @@ public class TaskServiceImplementation implements TaskService
         return dto;
     }
 
+    @Transactional
     private Task mapTaskPostDtoToTaskEntity(TaskPostDto dto)
     {
         Task task = new Task();

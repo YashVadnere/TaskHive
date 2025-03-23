@@ -145,6 +145,7 @@ public class EpicServiceImplementation implements EpicService
     }
 
     @Override
+    @Transactional
     public ResponseDto deleteEpic(Long projectId, Long epicId, UserDetails userDetails)
     {
         Project project = projectRepository.findById(projectId)

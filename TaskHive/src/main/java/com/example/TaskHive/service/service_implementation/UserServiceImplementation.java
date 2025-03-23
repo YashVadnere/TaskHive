@@ -85,6 +85,7 @@ public class UserServiceImplementation implements UserService
     }
 
     @Override
+    @Transactional
     public ResponseDto updateProfilePicture(UserDetails userDetails, MultipartFile file)
     {
         User user = userRepository.findByEmail(userDetails.getUsername())

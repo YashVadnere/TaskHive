@@ -62,4 +62,12 @@ public class Stories
     @JsonBackReference
     private List<Task> tasks = new ArrayList<>();
 
+    @ManyToOne
+    @JoinColumn(
+            name = "sprint_id",
+            referencedColumnName = "sprintId"
+    )
+    @JsonBackReference
+    private Sprint sprint;
+
 }
