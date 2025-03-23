@@ -1,9 +1,6 @@
 package com.example.TaskHive.controller;
 
-import com.example.TaskHive.dto.ProjectPostDto;
-import com.example.TaskHive.dto.ProjectResponseDto;
-import com.example.TaskHive.dto.ProjectUpdateDto;
-import com.example.TaskHive.dto.ResponseDto;
+import com.example.TaskHive.dto.*;
 import com.example.TaskHive.service.service_interface.ProjectService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -54,6 +51,14 @@ public class ProjectController
             @RequestParam String projectName
     ) {
         return new ResponseEntity<>(projectService.search(userId, projectName),HttpStatus.OK);
+    }
+
+    @GetMapping("/projects/{projectId}/members")
+    public ResponseEntity<List<ProjectMemberDto>> getAllProjectMembers(
+            @PathVariable("projectId") Long projectId,
+            @AuthenticationPrincipal UserDetails userDetails
+    ) {
+        return new ResponseEntity<>(projectService.getAllProjectMembers(projectId, userDetails), HttpStatus.OK);
     }
 
     @PutMapping("/projects/{projectId}")

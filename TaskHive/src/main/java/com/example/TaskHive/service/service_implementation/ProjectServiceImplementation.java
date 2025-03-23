@@ -1,10 +1,8 @@
 package com.example.TaskHive.service.service_implementation;
 
-import com.example.TaskHive.dto.ProjectPostDto;
-import com.example.TaskHive.dto.ProjectResponseDto;
-import com.example.TaskHive.dto.ProjectUpdateDto;
-import com.example.TaskHive.dto.ResponseDto;
+import com.example.TaskHive.dto.*;
 import com.example.TaskHive.entity.*;
+import com.example.TaskHive.exceptions.Mismatch;
 import com.example.TaskHive.exceptions.ProjectLimitExceeded;
 import com.example.TaskHive.exceptions.ResourceNotFound;
 import com.example.TaskHive.repository.ProductBacklogRepository;
@@ -281,6 +279,34 @@ public class ProjectServiceImplementation implements ProjectService
         responseDto.setMessage("User deleted successfully");
 
         return responseDto;
+    }
+
+    @Override
+    public List<ProjectMemberDto> getAllProjectMembers(Long projectId, UserDetails userDetails)
+    {
+        User user = userRepository.findByEmail(userDetails.getUsername())
+                .orElseThrow(() -> new ResourceNotFound("User not found"));
+
+        Project project = projectRepository.findById(projectId)
+                .orElseThrow(() -> new ResourceNotFound("Project not found"));
+
+        boolean isMember = project.getProjectMembers()
+                .stream()
+                .anyMatch(member -> member.getUser().getUserId().equals(user.getUserId()));
+
+        if(!isMember)
+        {
+            throw new Mismatch("User is not a project member");
+        }
+
+        return project.getProjectMembers()
+                .stream()
+                .map(member -> new ProjectMemberDto(
+                        member.getUser().getUserId(),
+                        member.getUser().getFullName(),
+                        member.getUser().getEmail()
+                ))
+                .toList();
     }
 
     private Project mapProjectPostDtoToEntity(ProjectPostDto dto)

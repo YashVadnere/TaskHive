@@ -96,7 +96,6 @@ public class TaskServiceImplementation implements TaskService
                 .orElseThrow(() -> new ResourceNotFound("Task not found"));
 
         return mapTaskEntityToTaskGetDto(task, stories);
-
     }
 
     @Override
@@ -212,6 +211,4 @@ public class TaskServiceImplementation implements TaskService
         task.setAssignedTo(assignedTo);
         return task;
     }
-
-
 }

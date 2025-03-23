@@ -1,9 +1,6 @@
 package com.example.TaskHive.service.service_interface;
 
-import com.example.TaskHive.dto.ProjectPostDto;
-import com.example.TaskHive.dto.ProjectResponseDto;
-import com.example.TaskHive.dto.ProjectUpdateDto;
-import com.example.TaskHive.dto.ResponseDto;
+import com.example.TaskHive.dto.*;
 import com.example.TaskHive.entity.Project;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
@@ -29,4 +26,6 @@ public interface ProjectService
     ResponseDto leaveProjectById(UserDetails userDetails, Long projectId);
 
     ResponseDto removeTeamMember(Long projectId, Long memberId, UserDetails userDetails);
+
+    List<ProjectMemberDto> getAllProjectMembers(Long projectId, UserDetails userDetails);
 }
