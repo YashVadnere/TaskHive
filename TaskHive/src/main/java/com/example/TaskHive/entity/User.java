@@ -85,7 +85,7 @@ public class User implements UserDetails
 
     @OneToMany(mappedBy = "createdBy")
     @JsonManagedReference
-    private List<Task> creator = new ArrayList<>();
+    private List<Task> tasks = new ArrayList<>();
 
     @OneToMany(mappedBy = "assignedTo")
     private List<Task> assigned = new ArrayList<>();

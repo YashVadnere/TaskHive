@@ -174,6 +174,26 @@ public class EpicServiceImplementation implements EpicService
         return responseDto;
     }
 
+    @Override
+    public EpicResponseDto getEpicsById(Long projectId, Long epicId, UserDetails userDetails)
+    {
+        User user = userRepository.findByEmail(userDetails.getUsername())
+                .orElseThrow(() -> new ResourceNotFound("User not found"));
+
+        Project project = projectRepository.findById(projectId)
+                .orElseThrow(() -> new ResourceNotFound("Project not found"));
+
+        if(!project.getUser().getUserId().equals(user.getUserId()))
+        {
+            throw new Mismatch("Project does not belong to user");
+        }
+
+        Epic epic = epicRepository.findById(epicId)
+                .orElseThrow(() -> new ResourceNotFound("Epic not found"));
+
+        return mapEpicEntityToEpicResponseDto(epic);
+    }
+
     private EpicResponseDto mapEpicEntityToEpicResponseDto(Epic epic)
     {
         EpicResponseDto dto = new EpicResponseDto();

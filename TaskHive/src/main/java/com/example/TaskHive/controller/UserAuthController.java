@@ -45,7 +45,4 @@ public class UserAuthController
     {
         return new ResponseEntity<>(userAuthService.signIn(dto),HttpStatus.OK);
     }
-
-
-
 }

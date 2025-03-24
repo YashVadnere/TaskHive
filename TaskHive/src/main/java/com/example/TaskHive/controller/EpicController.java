@@ -32,14 +32,6 @@ public class EpicController
         this.projectSecurityService = projectSecurityService;
     }
 
-    @GetMapping("/projects/{projectId}/epics")
-    public ResponseEntity<List<EpicResponseDto>> getAllEpicsByProjectId(
-            @PathVariable("projectId") Long projectId,
-            @AuthenticationPrincipal UserDetails userDetails
-    ) {
-        return new ResponseEntity<>(epicService.getAllEpicsByProjectId(projectId, userDetails), HttpStatus.OK);
-    }
-
     @PostMapping("/projects/{projectId}/epics")
     @PreAuthorize("@projectSecurityService.hasRoleInProject(#projectId, principal, 'SCRUM_MASTER')")
     public ResponseEntity<ResponseDto> createEpic(
@@ -48,6 +40,23 @@ public class EpicController
             @RequestBody EpicDto dto
     ) {
         return new ResponseEntity<>(epicService.createEpic(projectId, userDetails, dto), HttpStatus.OK);
+    }
+
+    @GetMapping("/projects/{projectId}/epics")
+    public ResponseEntity<List<EpicResponseDto>> getAllEpicsByProjectId(
+            @PathVariable("projectId") Long projectId,
+            @AuthenticationPrincipal UserDetails userDetails
+    ) {
+        return new ResponseEntity<>(epicService.getAllEpicsByProjectId(projectId, userDetails), HttpStatus.OK);
+    }
+
+    @GetMapping("/projects/{projectId}/epics/{epicId}")
+    public ResponseEntity<EpicResponseDto> getEpicsById(
+            @PathVariable("projectId") Long projectId,
+            @PathVariable("epicId") Long epicId,
+            @AuthenticationPrincipal UserDetails userDetails
+    ) {
+        return new ResponseEntity<>(epicService.getEpicsById(projectId, epicId, userDetails), HttpStatus.OK);
     }
 
     @PutMapping("/projects/{projectId}/epics/{epicId}")

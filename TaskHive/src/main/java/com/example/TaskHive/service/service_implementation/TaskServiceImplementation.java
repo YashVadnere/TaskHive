@@ -61,6 +61,12 @@ public class TaskServiceImplementation implements TaskService
         task.setUpdatedAt(LocalDateTime.now());
         task.setCreatedBy(creator);
         task.setStories(stories);
+
+        creator.getTasks().add(task);
+        stories.getTasks().add(task);
+
+        userRepository.save(creator);
+        storiesRepository.save(stories);
         taskRepository.save(task);
 
         ResponseDto responseDto = new ResponseDto();
@@ -183,6 +189,7 @@ public class TaskServiceImplementation implements TaskService
     private TaskGetDto mapTaskEntityToTaskGetDto(Task task, Stories stories)
     {
         TaskGetDto dto = new TaskGetDto();
+        dto.setTaskId(task.getTaskId());
         dto.setTitle(task.getTitle());
         dto.setDescription(task.getDescription());
         dto.setTaskPriority(task.getTaskPriority());

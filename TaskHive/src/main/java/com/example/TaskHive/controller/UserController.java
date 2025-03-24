@@ -66,5 +66,4 @@ public class UserController
     {
         return new ResponseEntity<>(userService.deleteProfilePicture(userDetails), HttpStatus.OK);
     }
-
 }

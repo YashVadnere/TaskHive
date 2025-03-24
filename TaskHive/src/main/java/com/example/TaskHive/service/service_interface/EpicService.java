@@ -20,4 +20,6 @@ public interface EpicService
     ResponseDto updateEpic(Long projectId, Long epicId, EpicUpdateDto dto, UserDetails userDetails);
 
     ResponseDto deleteEpic(Long projectId, Long epicId, UserDetails userDetails);
+
+    EpicResponseDto getEpicsById(Long projectId, Long epicId, UserDetails userDetails);
 }
