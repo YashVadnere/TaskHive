@@ -17,33 +17,16 @@ import reactor.core.publisher.Flux;
 public class ChatbotServiceImplementation implements ChatbotService
 {
     private final UserRepository userRepository;
-    private final ProjectRepository projectRepository;
-    private final EpicRepository epicRepository;
-    private final StoriesRepository storiesRepository;
-    private final TaskRepository taskRepository;
-    private final BugRepository bugRepository;
-    private final ProjectMemberRepository projectMemberRepository;
     private final ChatClient chatClient;
 
     @Autowired
     public ChatbotServiceImplementation(
             UserRepository userRepository,
-            ProjectRepository projectRepository,
-            EpicRepository epicRepository,
-            StoriesRepository storiesRepository,
-            TaskRepository taskRepository,
-            BugRepository bugRepository,
-            ProjectMemberRepository projectMemberRepository,
             ChatClient.Builder chatClient
 
     ) {
         this.userRepository = userRepository;
-        this.projectRepository = projectRepository;
-        this.epicRepository = epicRepository;
-        this.storiesRepository = storiesRepository;
-        this.taskRepository = taskRepository;
-        this.bugRepository = bugRepository;
-        this.projectMemberRepository = projectMemberRepository;
+
         this.chatClient = chatClient
                 .defaultAdvisors(new MessageChatMemoryAdvisor(new InMemoryChatMemory()))
                 .build();
