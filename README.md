@@ -17,6 +17,7 @@ TaskHive is an Agile project management application that follows the Scrum frame
 - Interactive dashboard with project analytics
 - Collaboration tools including comments and file attachments
 - Secure authentication and authorization using JWT
+- Built-in chat application for team communication, allowing project members to chat and collaborate in real time
 
 ## Tech Stack
 ### Frontend
