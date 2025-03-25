@@ -1,5 +1,6 @@
 package com.example.TaskHive.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
@@ -89,6 +90,10 @@ public class User implements UserDetails
 
     @OneToMany(mappedBy = "assignedTo")
     private List<Task> assigned = new ArrayList<>();
+
+    @OneToMany(mappedBy = "creator")
+    @JsonManagedReference
+    private List<Bug> bugs;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
