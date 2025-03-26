@@ -41,4 +41,13 @@ public class PaymentController
         return new ResponseEntity<>(paymentService.success(username, paymentName, response), HttpStatus.OK);
     }
 
+    @GetMapping("/cancel")
+    public ResponseEntity<String> cancel(
+            @RequestParam("username") String username,
+            @RequestParam("payment") String paymentName,
+            HttpServletResponse response
+    ) {
+        return new ResponseEntity<>(paymentService.cancel(username, paymentName, response), HttpStatus.OK);
+    }
+
 }

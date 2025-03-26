@@ -140,4 +140,26 @@ public class PaymentServiceImplementation implements PaymentService
 
         return "Success";
     }
+
+    @Override
+    public String cancel(String username, String paymentName, HttpServletResponse response)
+    {
+        User user = userRepository.findByEmail(username)
+                .orElseThrow(() -> new ResourceNotFound("User not found"));
+
+        Payment payment = paymentRepository.findByName(paymentName)
+                .orElseThrow(() -> new ResourceNotFound("Payment not found"));
+
+        payment.setPaymentStatus(PaymentStatus.PAYMENT_FAILED);
+        paymentRepository.save(payment);
+//        try
+//        {
+//            response.sendRedirect("");
+//
+//        } catch (IOException e) {
+//            throw new RuntimeException(e);
+//        }
+
+        return "Failure";
+    }
 }

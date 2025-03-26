@@ -37,8 +37,20 @@ TaskHive is an Agile project management application that follows the Scrum frame
 ## Future Enhancements
 - Integration with third-party services like Slack and Jira
 - AI-powered task prioritization
-- Mobile application suppor
+- Mobile application support
 - Multi-language support
+
+## Contribution & Licensing
+
+-  This project is developed and maintained by **@YashVadnere**.
+-  Contributions are welcome! If you’d like to contribute, fork the repo and create a pull request.
+- License: MIT License (Allows use, but requires credit).
+
+
+## Connect & Support
+
+- If you like this project, consider ⭐ starring the repo and sharing it with your network!
+
 
 ---
 

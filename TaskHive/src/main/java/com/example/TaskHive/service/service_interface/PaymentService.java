@@ -12,4 +12,6 @@ public interface PaymentService
     PaymentGetDto checkoutProducts(PaymentPostDto dto, UserDetails userDetails);
 
     String success(String username, String paymentName, HttpServletResponse response);
+
+    String cancel(String username, String paymentName, HttpServletResponse response);
 }
