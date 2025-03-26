@@ -49,6 +49,8 @@ public class User implements UserDetails
     @Enumerated(EnumType.STRING)
     private ActivePlan activePlan;
     @JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss")
+    private LocalDateTime planEndsAt;
+    @JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss")
     private LocalDateTime lastLogin;
 
     private boolean isEnabled;
@@ -94,6 +96,10 @@ public class User implements UserDetails
     @OneToMany(mappedBy = "creator")
     @JsonManagedReference
     private List<Bug> bugs;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
+    @JsonManagedReference
+    private List<Payment> payments;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

@@ -70,6 +70,7 @@ public class SecurityConfig
                 .authorizeHttpRequests(
                         request->request
                                 .requestMatchers("/auth/**").permitAll()
+                                .requestMatchers("/api/v1/success/**").permitAll()
                                 .anyRequest().authenticated()
                 ).sessionManagement(
                         session->session

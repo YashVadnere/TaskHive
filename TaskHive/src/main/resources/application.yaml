@@ -44,3 +44,6 @@ spring:
       max-file-size: 20MB
       max-request-size: 20MB
 
+  stripe:
+    secret-key: "${STRIPE_SECRET_KEY}"
+

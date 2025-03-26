@@ -64,6 +64,19 @@ public class SprintServiceImplementation implements SprintService
             sprint.setSprintStatus(SprintStatus.COMPLETED);
         }
         sprintRepository.saveAll(activeSprints);
+
+        List<User> expiredUsers = userRepository.findAllByPlanEndsAtBefore(now);
+
+        for (User user : expiredUsers)
+        {
+            if(user.getActivePlan() != ActivePlan.FREE)
+            {
+                user.setActivePlan(ActivePlan.FREE);
+                user.setProjectLimit(3L);
+                user.setPlanEndsAt(null);
+                userRepository.save(user);
+            }
+        }
     }
 
     @Override

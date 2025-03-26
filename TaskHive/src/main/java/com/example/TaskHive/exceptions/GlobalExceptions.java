@@ -119,4 +119,13 @@ public class GlobalExceptions
         return new ResponseEntity<>(exceptionResponse, HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler(PaymentProcessingException.class)
+    public ResponseEntity<?> handlePaymentProcessingException(PaymentProcessingException e)
+    {
+        ExceptionResponse exceptionResponse = new ExceptionResponse();
+        exceptionResponse.setCurrentTime(LocalDateTime.now());
+        exceptionResponse.setMessage(e.getMessage());
+        return new ResponseEntity<>(exceptionResponse, HttpStatus.BAD_REQUEST);
+    }
+
 }

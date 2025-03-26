@@ -1,8 +1,10 @@
 package com.example.TaskHive.service.service_implementation;
 
+import com.example.TaskHive.entity.ActivePlan;
 import com.example.TaskHive.entity.User;
+import com.example.TaskHive.exceptions.BadRequestException;
 import com.example.TaskHive.exceptions.ResourceNotFound;
-import com.example.TaskHive.repository.*;
+import com.example.TaskHive.repository.UserRepository;
 import com.example.TaskHive.service.service_interface.ChatbotService;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.chat.client.advisor.MessageChatMemoryAdvisor;
@@ -38,6 +40,11 @@ public class ChatbotServiceImplementation implements ChatbotService
     {
         User user = userRepository.findByEmail(userDetails.getUsername())
                 .orElseThrow(() -> new ResourceNotFound("User not found"));
+
+        if(user.getActivePlan() == ActivePlan.FREE)
+        {
+            throw new BadRequestException("Feature valid for monthly and yearly subscription holders only");
+        }
 
         ChatOptions chatOptions = ChatOptions.builder()
                 .temperature(0.9)
