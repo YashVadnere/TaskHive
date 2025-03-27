@@ -71,6 +71,7 @@ public class SecurityConfig
                         request->request
                                 .requestMatchers("/auth/**").permitAll()
                                 .requestMatchers("/api/v1/success/**").permitAll()
+                                .requestMatchers("/api/v1/cancel").permitAll()
                                 .anyRequest().authenticated()
                 ).sessionManagement(
                         session->session

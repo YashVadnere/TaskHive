@@ -29,11 +29,6 @@ spring:
     secret-key: "${SECURITY_SECRET_KEY}"
     expiration: 86400000
 
-
-  app:
-    oauth2:
-      redirect-url: "/auth/user-info"
-
   mail:
     username: "${MAIL_USERNAME}"
     password: "${MAIL_PASSWORD}"
