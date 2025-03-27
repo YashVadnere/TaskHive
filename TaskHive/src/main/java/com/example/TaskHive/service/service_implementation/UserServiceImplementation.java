@@ -75,7 +75,6 @@ public class UserServiceImplementation implements UserService
     public ResponseDto updateProfile(UserDetails userDetails, UserUpdateDto dto)
     {
         User user = mapUserUpdateDtoToUserEntity(userDetails.getUsername(), dto);
-
         userRepository.save(user);
 
         ResponseDto responseDto = new ResponseDto();

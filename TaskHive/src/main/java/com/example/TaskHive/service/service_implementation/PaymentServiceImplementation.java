@@ -2,6 +2,7 @@ package com.example.TaskHive.service.service_implementation;
 
 import com.example.TaskHive.dto.PaymentGetDto;
 import com.example.TaskHive.dto.PaymentPostDto;
+import com.example.TaskHive.dto.PaymentResponseDto;
 import com.example.TaskHive.entity.ActivePlan;
 import com.example.TaskHive.entity.Payment;
 import com.example.TaskHive.entity.PaymentStatus;
@@ -23,6 +24,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 public class PaymentServiceImplementation implements PaymentService
@@ -161,5 +163,29 @@ public class PaymentServiceImplementation implements PaymentService
 //        }
 
         return "Failure";
+    }
+
+    @Override
+    public List<PaymentResponseDto> getPaymentHistory(UserDetails userDetails)
+    {
+        User user = userRepository.findByEmail(userDetails.getUsername())
+                .orElseThrow(() -> new ResourceNotFound("User not found"));
+
+        return user.getPayments().stream()
+                .map(this::mapPaymentEntityToPaymentResponseDto)
+                .toList();
+    }
+
+    private PaymentResponseDto mapPaymentEntityToPaymentResponseDto(Payment payment)
+    {
+        PaymentResponseDto dto = new PaymentResponseDto();
+        dto.setPaymentId(payment.getPaymentId());
+        dto.setName(payment.getName());
+        dto.setAmount(payment.getAmount());
+        dto.setCurrency(payment.getCurrency());
+        dto.setPlan(payment.getPlan());
+        dto.setPaymentStatus(payment.getPaymentStatus());
+        dto.setPaymentDate(payment.getPaymentDate());
+        return dto;
     }
 }

@@ -42,6 +42,8 @@ public class Project
     private LocalDate startDate;
     @JsonFormat(pattern = "dd-MM-yyyy")
     private LocalDate endDate;
+    @JsonFormat(pattern = "dd-MM-yyyy")
+    private LocalDateTime updatedAt;
     @Enumerated(EnumType.STRING)
     private ProjectStatus projectStatus;
     @JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss")

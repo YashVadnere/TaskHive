@@ -183,6 +183,7 @@ public class ProjectServiceImplementation implements ProjectService
             project.setVisibility(dto.getVisibility());
         }
 
+        project.setUpdatedAt(LocalDateTime.now());
         projectRepository.save(project);
 
         ResponseDto responseDto = new ResponseDto();

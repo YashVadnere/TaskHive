@@ -199,6 +199,7 @@ public class SprintServiceImplementation implements SprintService
             storiesRepository.saveAll(stories);
         }
 
+        sprint.setUpdatedAt(LocalDateTime.now());
         sprintRepository.save(sprint);
 
         ResponseDto responseDto = new ResponseDto();

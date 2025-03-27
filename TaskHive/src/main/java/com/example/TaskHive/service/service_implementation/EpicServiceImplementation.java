@@ -137,6 +137,7 @@ public class EpicServiceImplementation implements EpicService
         if (StringUtils.hasText(dto.getPriority())) {
             epic.setPriority(dto.getPriority());
         }
+        epic.setUpdatedAt(LocalDateTime.now());
         epicRepository.save(epic);
 
         ResponseDto responseDto = new ResponseDto();

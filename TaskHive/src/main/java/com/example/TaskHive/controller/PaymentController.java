@@ -2,6 +2,7 @@ package com.example.TaskHive.controller;
 
 import com.example.TaskHive.dto.PaymentGetDto;
 import com.example.TaskHive.dto.PaymentPostDto;
+import com.example.TaskHive.dto.PaymentResponseDto;
 import com.example.TaskHive.service.service_implementation.PaymentServiceImplementation;
 import com.example.TaskHive.service.service_interface.PaymentService;
 import jakarta.servlet.http.HttpServletResponse;
@@ -11,6 +12,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1")
@@ -48,6 +51,12 @@ public class PaymentController
             HttpServletResponse response
     ) {
         return new ResponseEntity<>(paymentService.cancel(username, paymentName, response), HttpStatus.OK);
+    }
+
+    @GetMapping("/payments")
+    public ResponseEntity<List<PaymentResponseDto>> getPaymentHistory(@AuthenticationPrincipal UserDetails userDetails)
+    {
+        return new ResponseEntity(paymentService.getPaymentHistory(userDetails), HttpStatus.OK);
     }
 
 }

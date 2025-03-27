@@ -1,6 +1,7 @@
 package com.example.TaskHive.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -32,8 +33,11 @@ public class Payment
     private Long quantity;
     private Long amount;
     private String currency;
+    @Enumerated(EnumType.STRING)
     private ActivePlan plan;
+    @Enumerated(EnumType.STRING)
     private PaymentStatus paymentStatus;
+    @JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss")
     private LocalDateTime paymentDate;
 
     @ManyToOne

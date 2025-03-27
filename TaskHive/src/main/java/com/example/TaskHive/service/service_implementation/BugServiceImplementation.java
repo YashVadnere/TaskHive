@@ -141,6 +141,7 @@ public class BugServiceImplementation implements BugService
             bug.setBugStatus(dto.getBugStatus());
         }
 
+        bug.setUpdatedAt(LocalDateTime.now());
         bugRepository.save(bug);
 
         ResponseDto responseDto = new ResponseDto();
